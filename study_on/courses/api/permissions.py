@@ -1,6 +1,6 @@
 from rest_framework.permissions import BasePermission
 
-from study_on.study_on.courses.models import AvailableLessons
+# from study_on.study_on.courses.models import AvailableLessons
 
 
 class IsAdminOrStuff(BasePermission):
@@ -8,14 +8,19 @@ class IsAdminOrStuff(BasePermission):
         return request.user and request.user.is_staff
 
 
-class IsOnCourse(BasePermission):
+class IsStudentOnCourse(BasePermission):
     def has_object_permission(self, request, view, obj):
         return obj.students.filter(id=request.user.id).exists()
 
 
-class IsLessonAvailable(BasePermission):
+class IsTeacherOnCourse(BasePermission):
     def has_object_permission(self, request, view, obj):
-        available_lesson = AvailableLessons.objects.get(course=obj.course, student=request.user)
-        if obj.order <= available_lesson.available:
-            return True
-        return False
+        return obj.teachers.filter(id=request.user.id).exists()
+
+
+# class IsLessonAvailable(BasePermission):
+#     def has_object_permission(self, request, view, obj):
+#         available_lesson = AvailableLessons.objects.get(course=obj.course, student=request.user)
+#         if obj.order <= available_lesson.available:
+#             return True
+#         return False

@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.admin import register
 
-from .models import Content, Course, Lesson, Question, Subject, Test
+from study_on.courses.models import AvailableLessons, Content, Course, Lesson, Question, Subject, Test
 
 
 @register(Subject)
@@ -38,3 +38,9 @@ class TestAdmin(admin.ModelAdmin):
 class QuestionAdmin(admin.ModelAdmin):
     list_display = ("title", "order")
     list_filter = ("title",)
+
+
+@register(AvailableLessons)
+class AvailableLessonsAdmin(admin.ModelAdmin):
+    list_display = ("course", "student", "max_available_lesson")
+    list_filter = ("student",)
