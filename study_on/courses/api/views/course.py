@@ -46,21 +46,21 @@ class CourseViewSet(BaseModelViewSet):
     @action(
         detail=True,
         methods=["get"],
-        url_path="contents",
+        url_path="get-contents",
         serializer_class=CourseWithContentsSerializer,
         permission_classes=(IsStudentOnCourse, IsTeacherOnCourse, IsAdminOrStuff),
     )
-    def contents(self, request, *args, **kwargs):
+    def get_contents(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
 
     @action(
         detail=False,
         methods=["get"],
-        url_path="participants",
+        url_path="get-participants",
         serializer_class=CourseParticipantsAmountSerializer,
         permission_classes=[IsAdminOrStuff],
     )
-    def participants(self, request, *args, **kwargs):
+    def get_participants(self, request, *args, **kwargs):
         annotated_results = Course.objects.annotate(
             teachers_count=Count(F("teachers"), distinct=True),
             students_count=Count(F("students"), distinct=True),

@@ -26,11 +26,11 @@ class QuestionViewSet(BaseModelViewSet):
     @action(
         detail=True,
         methods=["post"],
-        url_path="answer",
+        url_path="send-answer",
         serializer_class=QuestionAnswerSerializer,
         permission_classes=[IsAdminOrStuff],
     )
-    def answer(self, request, *args, **kwargs):
+    def send_answer(self, request, *args, **kwargs):
         question = self.get_object()
         question.answer_text = request.data["answer_text"]
         question.save()
@@ -39,11 +39,11 @@ class QuestionViewSet(BaseModelViewSet):
     @action(
         detail=True,
         methods=["post"],
-        url_path="answer-check",
+        url_path="check-answer",
         serializer_class=QuestionAnswerSerializer,
         permission_classes=[IsTeacherOnCourse, IsAdminOrStuff],
     )
-    def answer_check(self, request, *args, **kwargs):
+    def check_answer(self, request, *args, **kwargs):
         question = self.get_object()
         question.answer_check = True
         question.save()

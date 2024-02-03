@@ -32,11 +32,11 @@ class SubjectViewSet(BaseModelViewSet):
     @action(
         detail=False,
         methods=["get"],
-        url_path="subjects-with-courses",
+        url_path="get-subjects-with-courses",
         serializer_class=SubjectWithCourseSerializer,
         permission_classes=[IsAdminOrStuff],
     )
-    def subjects_with_courses(self, request):
+    def get_subjects_with_courses(self, request):
         queryset = self.filter_queryset(self.get_queryset()).filter(courses__isnull=False).distinct()
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
@@ -44,12 +44,12 @@ class SubjectViewSet(BaseModelViewSet):
     @action(
         detail=True,
         methods=["get"],
-        url_path="courses-amount",
+        url_path="get-courses-amount",
         serializer_class=SubjectAmountSerializer,
         permission_classes=[IsAdminOrStuff],
     )
     @method_decorator(cache_page(60 * 15))
-    def courses_amount(self, request, *args, **kwargs):
+    def get_courses_amount(self, request, *args, **kwargs):
         annotated_results = self.filter_queryset(self.get_queryset()).annotate(course_count=Count("courses"))
         serializer = self.get_serializer(annotated_results, many=True)
         return Response(serializer.data)
