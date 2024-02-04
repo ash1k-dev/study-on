@@ -1,81 +1,60 @@
-# study_on
+# Описание проекта Study On
 
-Behold My Awesome Project!
+## Проект представляет из себя платформу для организации обучения (LMS-Learning Management System) со следующим функционалом:
+- Создание курса с различным контентом (текст, видео, изображения)
+- Разделение пользователей на учителей (данная категория имеет ряд дополнительных возможноей, такимх как, нпаример, проверка тестов) и студентов. Роль определяется только в рамках конкретного курса (уитель на одном можети быть студентом на другом курсе)
+- Организация доступа к следующим разделам/урокам после проверки тестов на знания
 
-[![Built with Cookiecutter Django](https://img.shields.io/badge/built%20with-Cookiecutter%20Django-ff69b4.svg?logo=cookiecutter)](https://github.com/cookiecutter/cookiecutter-django/)
-[![Black code style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
-License: MIT
+## Используемые технологии:
+- Django
+- Django REST Framework
+- Docker
+- Postgres
+- Celery
 
-## Settings
+## Установка:
+1. Клонируйте проект
+- git clone https://github.com/ash1k-dev/study_on
+2. Установите переменные окружения:
+- DATA_BASE_URL (полный url к Вашей базе Postgres (пример - "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}"))
+- CELERY_BROCKER_URL (полный url к Вашему Redis (redis://localhost:6379/0))
+- USE_DOCKER (значение 'yes'')
+3. Запустите контейнеры с помощью docker-compose
+4. Проведите миграции:
+ - docker-compose exec web python manage.py makemigrations --noinput
+- docker-compose exec web python manage.py migrate --noinput
+5. Создайте superuser:
+- docker-compose exec web python manage.py createsuperuser
 
-Moved to [settings](http://cookiecutter-django.readthedocs.io/en/latest/settings.html).
 
-## Basic Commands
+## На проекте используются следующие модели:
 
-### Setting Up Your Users
+### Пользователь (User)
+Пользователь - участник платформы имеющий определенную роль в рамках конкретного курса
 
-- To create a **normal user account**, just go to Sign Up and fill out the form. Once you submit it, you'll see a "Verify Your E-mail Address" page. Go to your console to see a simulated email verification message. Copy the link into your browser. Now the user's email should be verified and ready to go.
+### Предмет (Subject)
+Предмет - наименования предмета, по которому происходит обучение. Связан с курсом
 
-- To create a **superuser account**, use this command:
+### Курс (Course)
+Курс - структура объеденяющая уроки по конкретному предмету. Связан с предметои и уроками
 
-      $ python manage.py createsuperuser
+### Урок (Lesson)
+Урок - структура объеденяющая содержимое (контент). Связан с курсом, контентом и тестами. Данная структура упорядачена в рамках курса
 
-For convenience, you can keep your normal user logged in on Chrome and your superuser logged in on Firefox (or similar), so that you can see how the site behaves for both kinds of users.
+### Контент (Content)
+Контент - содержимое урока. Может быть нескольких видов (текст, видео, изображение). Связан с уроком. Данная структура упорядачена в рамках урока
 
-### Type checks
+### Тест (Test)
+Тест - структура объеденяющая вопросы к уроку. Тест определяющим будет ли открыт доступ к последующим урокам. Связан уроком.
 
-Running type checks with mypy:
 
-    $ mypy study_on
+### Вопрос (Question).
+Вопрос - проверочный элемент урока. Связан с тестом. Данная структура упорядачена в рамках теста
 
-### Test coverage
+### Доступные уроки (AvailableLessons).
+Доступные уроки - определяет маскимально возможный номер урока достуный конкретному пользователю. Связан с пользователем и курсом.
 
-To run the tests, check your test coverage, and generate an HTML coverage report:
 
-    $ coverage run -m pytest
-    $ coverage html
-    $ open htmlcov/index.html
-
-#### Running tests with pytest
-
-    $ pytest
-
-### Live reloading and Sass CSS compilation
-
-Moved to [Live reloading and SASS compilation](https://cookiecutter-django.readthedocs.io/en/latest/developing-locally.html#sass-compilation-live-reloading).
-
-### Celery
-
-This app comes with Celery.
-
-To run a celery worker:
-
-```bash
-cd study_on
-celery -A config.celery_app worker -l info
-```
-
-Please note: For Celery's import magic to work, it is important _where_ the celery commands are run. If you are in the same folder with _manage.py_, you should be right.
-
-To run [periodic tasks](https://docs.celeryq.dev/en/stable/userguide/periodic-tasks.html), you'll need to start the celery beat scheduler service. You can start it as a standalone process:
-
-```bash
-cd study_on
-celery -A config.celery_app beat
-```
-
-or you can embed the beat service inside a worker with the `-B` option (not recommended for production use):
-
-```bash
-cd study_on
-celery -A config.celery_app worker -B -l info
-```
-
-## Deployment
-
-The following details how to deploy this application.
-
-### Docker
-
-See detailed [cookiecutter-django Docker documentation](http://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html).
+## Лицензия:
+MIT

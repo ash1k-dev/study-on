@@ -5,6 +5,8 @@ from study_on.courses.fields import OrderField
 
 
 class BaseModel(models.Model):
+    """Базовая модель, c полями даты создания и обновления"""
+
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -13,6 +15,8 @@ class BaseModel(models.Model):
 
 
 class Subject(BaseModel):
+    """Модель предмета"""
+
     title = models.CharField(max_length=200, verbose_name=_("Заголовок"))
     description = models.TextField(verbose_name=_("Описание"))
     slug = models.SlugField(max_length=200, unique=True, verbose_name=_("Ссылка"))
@@ -26,6 +30,8 @@ class Subject(BaseModel):
 
 
 class Course(BaseModel):
+    """Модель курса"""
+
     subject = models.ForeignKey(
         "courses.Subject", related_name="courses", on_delete=models.CASCADE, verbose_name=_("Предмет")
     )
@@ -48,6 +54,8 @@ class Course(BaseModel):
 
 
 class Lesson(BaseModel):
+    """Модель урока"""
+
     course = models.ForeignKey(
         "courses.Course", related_name="lessons", on_delete=models.CASCADE, verbose_name=_("Курс")
     )
@@ -64,6 +72,8 @@ class Lesson(BaseModel):
 
 
 class Content(BaseModel):
+    """Модель содержания"""
+
     lesson = models.ForeignKey(
         "courses.Lesson", related_name="contents", on_delete=models.CASCADE, verbose_name=_("Урок")
     )
@@ -81,6 +91,8 @@ class Content(BaseModel):
 
 
 class Test(BaseModel):
+    """Модель теста для урока"""
+
     lesson = models.ForeignKey(
         "courses.Lesson", related_name="tests", on_delete=models.CASCADE, verbose_name=_("Урок")
     )
@@ -97,6 +109,8 @@ class Test(BaseModel):
 
 
 class Question(BaseModel):
+    """Модель вопросов для теста"""
+
     test = models.ForeignKey(
         "courses.Test", related_name="questions", on_delete=models.CASCADE, verbose_name=_("Тест")
     )
@@ -115,6 +129,8 @@ class Question(BaseModel):
 
 
 class AvailableLessons(BaseModel):
+    """Модель доступных для пользователя уроков курса"""
+
     course = models.ForeignKey(
         "courses.Course", related_name="student", on_delete=models.CASCADE, verbose_name=_("Курс")
     )

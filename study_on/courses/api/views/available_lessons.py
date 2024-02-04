@@ -5,6 +5,8 @@ from study_on.services.views import BaseModelViewSet
 
 
 class AvailableLessonsViewSet(BaseModelViewSet):
+    """Доступные для пользователя уроки"""
+
     queryset = AvailableLessons.objects.all()
     serializer_class = ListAvailableLessonsSerializer
     permission_classes = (IsStudentOnCourse, IsTeacherOnCourse, IsAdminOrStuff)

@@ -12,12 +12,16 @@ from study_on.services.views import BaseModelViewSet
 
 
 class ContentFilter(filters.FilterSet):
+    """Фильтр контента уроков"""
+
     class Meta:
         model = Content
         fields = ("lesson",)
 
 
 class ContentViewSet(BaseModelViewSet):
+    """Контент урока"""
+
     queryset = Content.objects.all()
     serializer_class = ListContentSerializer
     permission_classes = (IsStudentOnCourse, IsTeacherOnCourse, IsAdminOrStuff)
@@ -26,6 +30,7 @@ class ContentViewSet(BaseModelViewSet):
     search_fields = ["lesson__title", "lesson__course__title"]
 
     def create(self, request, *args: Any, **kwargs: Any) -> Response:
+        """Создание контента"""
         if request.user.is_staff:
             return super().create(request, *args, **kwargs)
         else:

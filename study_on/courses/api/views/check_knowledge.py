@@ -12,12 +12,16 @@ from study_on.services.views import BaseModelViewSet
 
 
 class TestFilter(filters.FilterSet):
+    """Фильтр тестов урока"""
+
     class Meta:
         model = Test
         fields = ("lesson",)
 
 
 class TestViewSet(BaseModelViewSet):
+    """Тест урока"""
+
     queryset = Test.objects.all()
     serializer_class = ListTestSerializer
     permission_classes = (IsStudentOnCourse, IsTeacherOnCourse, IsAdminOrStuff)
@@ -26,6 +30,7 @@ class TestViewSet(BaseModelViewSet):
     search_fields = ["title", "description", "lesson__title", "lesson__course__title"]
 
     def create(self, request, *args: Any, **kwargs: Any) -> Response:
+        """Создание теста"""
         if request.user.is_staff:
             return super().create(request, *args, **kwargs)
         else:

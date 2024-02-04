@@ -12,12 +12,16 @@ from study_on.services.views import BaseModelViewSet
 
 
 class LessonFilter(filters.FilterSet):
+    """Фильтр для уроков"""
+
     class Meta:
         model = Lesson
         fields = ("course",)
 
 
 class LessonViewSet(BaseModelViewSet):
+    """Урок"""
+
     queryset = Lesson.objects.all()
     serializer_class = ListLessonSerializer
     permission_classes = (IsStudentOnCourse, IsTeacherOnCourse, IsAdminOrStuff)
@@ -30,6 +34,7 @@ class LessonViewSet(BaseModelViewSet):
     ]
 
     def create(self, request, *args: Any, **kwargs: Any) -> Response:
+        """Создание урока"""
         if request.user.is_staff:
             return super().create(request, *args, **kwargs)
         else:

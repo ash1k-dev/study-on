@@ -13,12 +13,16 @@ from study_on.services.views import BaseModelViewSet
 
 
 class QuestionFilter(filters.FilterSet):
+    """Фильтр для вопросов курса"""
+
     class Meta:
         model = Question
         fields = ("test",)
 
 
 class QuestionViewSet(BaseModelViewSet):
+    """Вопрос урока"""
+
     queryset = Question.objects.all()
     serializer_class = ListQuestionSerializer
     permission_classes = (IsStudentOnCourse, IsTeacherOnCourse, IsAdminOrStuff)
@@ -34,6 +38,7 @@ class QuestionViewSet(BaseModelViewSet):
         permission_classes=[IsAdminOrStuff],
     )
     def send_answer(self, request, *args, **kwargs):
+        """Отправка ответа на вопрос"""
         question = self.get_object()
         question.answer_text = request.data["answer_text"]
         question.save()
@@ -47,12 +52,14 @@ class QuestionViewSet(BaseModelViewSet):
         permission_classes=[IsTeacherOnCourse, IsAdminOrStuff],
     )
     def check_answer(self, request, *args, **kwargs):
+        """Проверка ответа на вопрос"""
         question = self.get_object()
         question.answer_check = True
         question.save()
         return Response({"answer_check": True})
 
     def create(self, request, *args: Any, **kwargs: Any) -> Response:
+        """Создания вопроса"""
         if request.user.is_staff:
             return super().create(request, *args, **kwargs)
         else:

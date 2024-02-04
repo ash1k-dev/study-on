@@ -20,12 +20,16 @@ from study_on.services.views import BaseModelViewSet
 
 
 class SubjectFilter(filters.FilterSet):
+    """Фильтр для предметов"""
+
     class Meta:
         model = Subject
         fields = ("slug",)
 
 
 class SubjectViewSet(BaseModelViewSet):
+    """Предмет"""
+
     queryset = Subject.objects.all()
     serializer_class = ListSubjectSerializer
     filterset_class = SubjectFilter
@@ -40,6 +44,7 @@ class SubjectViewSet(BaseModelViewSet):
         permission_classes=[IsAdminOrStuff],
     )
     def get_subjects_with_courses(self, request):
+        """Получение предметов с курсами"""
         queryset = self.filter_queryset(self.get_queryset()).filter(courses__isnull=False).distinct()
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
@@ -53,11 +58,13 @@ class SubjectViewSet(BaseModelViewSet):
     )
     @method_decorator(cache_page(60 * 15))
     def get_courses_amount(self, request, *args, **kwargs):
+        """Получение количества курсов по предмету"""
         annotated_results = self.filter_queryset(self.get_queryset()).annotate(course_count=Count("courses"))
         serializer = self.get_serializer(annotated_results, many=True)
         return Response(serializer.data)
 
     def create(self, request, *args: Any, **kwargs: Any) -> Response:
+        """Создание предмета"""
         if request.user.is_staff:
             return super().create(request, *args, **kwargs)
         else:

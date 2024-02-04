@@ -19,12 +19,16 @@ from study_on.services.views import BaseModelViewSet
 
 
 class CourseFilter(filters.FilterSet):
+    """Фильтр для курсов"""
+
     class Meta:
         model = Course
         fields = ("subject", "teachers", "students", "slug")
 
 
 class CourseViewSet(BaseModelViewSet):
+    """Курс"""
+
     queryset = Course.objects.all()
     serializer_class = ListCourseSerializer
     filterset_class = CourseFilter
@@ -38,6 +42,7 @@ class CourseViewSet(BaseModelViewSet):
         permission_classes=[IsAuthenticated],
     )
     def register_user_on_course(self, request, *args, **kwargs):
+        """Регистрация пользователя на курс"""
         course = self.get_object()
         if course.students.filter(id=request.user.id).exists():
             return Response({"registration": False})
@@ -54,6 +59,7 @@ class CourseViewSet(BaseModelViewSet):
         permission_classes=(IsStudentOnCourse, IsTeacherOnCourse, IsAdminOrStuff),
     )
     def get_contents(self, request, *args, **kwargs):
+        """Получение содержимого курса"""
         return self.retrieve(request, *args, **kwargs)
 
     @action(
@@ -64,6 +70,7 @@ class CourseViewSet(BaseModelViewSet):
         permission_classes=[IsAdminOrStuff],
     )
     def get_participants(self, request, *args, **kwargs):
+        """Получение количества участников курса"""
         annotated_results = Course.objects.annotate(
             teachers_count=Count(F("teachers"), distinct=True),
             students_count=Count(F("students"), distinct=True),
@@ -73,6 +80,7 @@ class CourseViewSet(BaseModelViewSet):
         return Response(serializer.data)
 
     def create(self, request, *args: Any, **kwargs: Any) -> Response:
+        """Создание курса"""
         if request.user.is_staff:
             return super().create(request, *args, **kwargs)
         else:
