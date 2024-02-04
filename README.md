@@ -22,8 +22,8 @@
 - USE_DOCKER (значение 'yes'')
 3. Запустите контейнеры с помощью docker-compose
 4. Проведите миграции:
- - docker-compose exec web python manage.py makemigrations --noinput
-- docker-compose exec web python manage.py migrate --noinput
+ - docker-compose exec web python manage.py makemigrations
+- docker-compose exec web python manage.py migrate
 5. Создайте superuser:
 - docker-compose exec web python manage.py createsuperuser
 
