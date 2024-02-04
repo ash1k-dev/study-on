@@ -3,6 +3,7 @@ from typing import Any
 from django_filters import rest_framework as filters
 from rest_framework import status
 from rest_framework.decorators import action
+from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
 
 from study_on.courses.api.permissions import IsAdminOrStuff, IsStudentOnCourse, IsTeacherOnCourse
@@ -22,6 +23,8 @@ class QuestionViewSet(BaseModelViewSet):
     serializer_class = ListQuestionSerializer
     permission_classes = (IsStudentOnCourse, IsTeacherOnCourse, IsAdminOrStuff)
     filterset_class = QuestionFilter
+    filter_backends = [SearchFilter]
+    search_fields = ["title", "question_text"]
 
     @action(
         detail=True,

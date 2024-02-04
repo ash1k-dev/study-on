@@ -4,6 +4,7 @@ from django.db.models import Count, F
 from django_filters import rest_framework as filters
 from rest_framework import status
 from rest_framework.decorators import action
+from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -27,6 +28,8 @@ class CourseViewSet(BaseModelViewSet):
     queryset = Course.objects.all()
     serializer_class = ListCourseSerializer
     filterset_class = CourseFilter
+    filter_backends = [SearchFilter]
+    search_fields = ["slug", "title", "description", "subject__title", "teachers__username", "students__username"]
 
     @action(
         detail=True,

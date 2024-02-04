@@ -6,6 +6,7 @@ from django.views.decorators.cache import cache_page
 from django_filters import rest_framework as filters
 from rest_framework import status
 from rest_framework.decorators import action
+from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
 
 from study_on.courses.api.permissions import IsAdminOrStuff
@@ -28,6 +29,8 @@ class SubjectViewSet(BaseModelViewSet):
     queryset = Subject.objects.all()
     serializer_class = ListSubjectSerializer
     filterset_class = SubjectFilter
+    filter_backends = [SearchFilter]
+    search_fields = ["slug", "title", "courses__title", "courses__slug"]
 
     @action(
         detail=False,

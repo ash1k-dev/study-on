@@ -2,6 +2,7 @@ from typing import Any
 
 from django_filters import rest_framework as filters
 from rest_framework import status
+from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
 
 from study_on.courses.api.permissions import IsAdminOrStuff, IsStudentOnCourse, IsTeacherOnCourse
@@ -19,8 +20,14 @@ class LessonFilter(filters.FilterSet):
 class LessonViewSet(BaseModelViewSet):
     queryset = Lesson.objects.all()
     serializer_class = ListLessonSerializer
-    filterset_class = LessonFilter
     permission_classes = (IsStudentOnCourse, IsTeacherOnCourse, IsAdminOrStuff)
+    filterset_class = LessonFilter
+    filter_backends = [SearchFilter]
+    search_fields = [
+        "title",
+        "course",
+        "description",
+    ]
 
     def create(self, request, *args: Any, **kwargs: Any) -> Response:
         if request.user.is_staff:
