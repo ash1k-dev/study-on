@@ -14,14 +14,17 @@ from study_on.courses.api.serializers.content import (
     UpdateContentSerializer,
 )
 from study_on.courses.api.serializers.course import (
+    CourseInfoSerializer,
     CourseParticipantsAmountSerializer,
     CourseWithContentsSerializer,
     CreateCourseSerializer,
+    CurrentCourseInfoSerializer,
     ListCourseSerializer,
     UpdateCourseSerializer,
 )
 from study_on.courses.api.serializers.lesson import (
     CreateLessonSerializer,
+    LessonInfoForCourseSerializer,
     LessonWithContentsSerializer,
     ListLessonSerializer,
     UpdateLessonSerializer,
@@ -68,4 +71,7 @@ __all__ = [
     "UpdateAvailableLessonsSerializer",
     "LessonWithContentsSerializer",
     "QuestionAnswerSerializer",
+    "CurrentCourseInfoSerializer",
+    "CourseInfoSerializer",
+    "LessonInfoForCourseSerializer",
 ]
