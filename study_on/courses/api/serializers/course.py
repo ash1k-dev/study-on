@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from study_on.courses.api.serializers.lesson import LessonWithContentsSerializer
+from study_on.courses.api.serializers.lesson import LessonInfoForCourseSerializer, LessonWithContentsSerializer
 from study_on.courses.models import Course
 
 
@@ -48,3 +48,24 @@ class CourseWithContentsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
         fields = ["id", "subject", "title", "slug", "created", "lessons"]
+
+
+class CourseInfoSerializer(serializers.ModelSerializer):
+    """Курсы с базовой информацией"""
+
+    students_amount = serializers.IntegerField(source="students_count", read_only=True)
+
+    class Meta:
+        model = Course
+        fields = ["author", "title", "students_amount"]
+
+
+class CurrentCourseInfoSerializer(serializers.ModelSerializer):
+    """Курсы с подробной информацией"""
+
+    lessons = LessonInfoForCourseSerializer(many=True)
+    tests_amount = serializers.IntegerField(source="tests_count", read_only=True)
+
+    class Meta:
+        model = Course
+        fields = ["title", "description", "teachers", "lessons", "tests_amount"]

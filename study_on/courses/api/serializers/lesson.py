@@ -36,3 +36,11 @@ class LessonWithContentsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
         fields = ["order", "title", "description", "contents"]
+
+
+class LessonInfoForCourseSerializer(serializers.ModelSerializer):
+    """Название урока"""
+
+    class Meta:
+        model = Lesson
+        fields = ["title"]

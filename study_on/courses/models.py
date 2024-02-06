@@ -32,9 +32,10 @@ class Subject(BaseModel):
 class Course(BaseModel):
     """Модель курса"""
 
-    subject = models.ForeignKey(
-        "courses.Subject", related_name="courses", on_delete=models.CASCADE, verbose_name=_("Предмет")
+    author = models.ForeignKey(
+        "users.User", on_delete=models.CASCADE, blank=True, default=None, verbose_name=_("Автор")
     )
+    subject = models.ForeignKey("courses.Subject", on_delete=models.CASCADE, verbose_name=_("Предмет"))
     teachers = models.ManyToManyField(
         "users.User", related_name="courses_teachers", blank=True, verbose_name=_("Преподаватели")
     )
@@ -151,4 +152,19 @@ class AvailableLessons(BaseModel):
         unique_together = ["course", "student"]
 
     def __str__(self):
-        return self.course
+        return f"For {self.course.title}: {self.max_available_lesson}"
+
+
+# class VerificationCode:
+#     """Модель кода верификации"""
+#     user = models.ForeignKey(
+#         "users.User", related_name="available_lessons", on_delete=models.CASCADE, verbose_name=_("Студент")
+#     )
+#     code = models.IntegerField(blank=False, verbose_name=_("Код"))
+#
+#     class Meta:
+#         verbose_name = _("Код верификации")
+#         verbose_name_plural = _("Код верификации")
+#
+#     def __str__(self):
+#         return self.code
