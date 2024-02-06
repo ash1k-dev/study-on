@@ -5,7 +5,7 @@ from email.message import EmailMessage
 from django.db.models import Q
 
 from config import celery_app
-from study_on.courses.models import AvailableLessons, Lesson
+from study_on.courses.models import AvailableLessons
 
 SMTP_HOST = "smtp.gmail.com"
 SMTP_PORT = 465
@@ -21,25 +21,8 @@ def get_email_user_template(student, student_email, course_name):
 
     email.set_content(
         "<div>"
-        f'<h1 style="color: red;">Здравствуйте, {student}, Вы давно не посещали курс "{course_name}"</h1>'
+        f'<h1>Здравствуйте, {student}, Вы давно не посещали курс "{course_name}"</h1>'
         "Возвращайтесь, мы Вас ждем!"
-        "</div>",
-        subtype="html",
-    )
-    return email
-
-
-def get_email_reacher_template(student, teacher, teacher_email, course, lesson):
-    email = EmailMessage()
-    email["Subject"] = f"Появился ответ от ученника {student} на курсе {course}"
-    email["From"] = "StudyOn <" + SMTP_EMAIL + ">"
-    email["To"] = teacher_email
-
-    email.set_content(
-        "<div>"
-        f"<h1>Здравствуйте, {teacher}."
-        f' На вашем курсе "{course}", в уроке "{lesson}"'
-        f" появился ответ ученика {student}</h1>"
         "</div>",
         subtype="html",
     )
@@ -61,26 +44,6 @@ def course_reminder():
         student_email = result.student.email
         course_name = result.course.title
         email = get_email_user_template(student, student_email, course_name)
-        with smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT) as server:
-            server.login(SMTP_EMAIL, SMTP_PASSWORD)
-            server.send_message(email)
-
-
-@celery_app.task()
-def teacher_reminder():
-    uinited_results = (
-        Lesson.objects.all()
-        .prefetch_related("test")
-        .prefetch_related("course", "course__students", "course__teachers")
-        .filter(test__answer_check=False)
-    )
-    for result in uinited_results:
-        student = result.course.students.username
-        teacher = result.course.teachers.username
-        teacher_email = result.teachers.email
-        course = result.course.title
-        lesson = result.title
-        email = get_email_reacher_template(student, teacher, teacher_email, course, lesson)
         with smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT) as server:
             server.login(SMTP_EMAIL, SMTP_PASSWORD)
             server.send_message(email)
