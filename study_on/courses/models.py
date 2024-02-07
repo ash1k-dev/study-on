@@ -153,18 +153,3 @@ class AvailableLessons(BaseModel):
 
     def __str__(self):
         return f"For {self.course.title}: {self.max_available_lesson}"
-
-
-# class VerificationCode:
-#     """Модель кода верификации"""
-#     user = models.ForeignKey(
-#         "users.User", related_name="available_lessons", on_delete=models.CASCADE, verbose_name=_("Студент")
-#     )
-#     code = models.IntegerField(blank=False, verbose_name=_("Код"))
-#
-#     class Meta:
-#         verbose_name = _("Код верификации")
-#         verbose_name_plural = _("Код верификации")
-#
-#     def __str__(self):
-#         return self.code

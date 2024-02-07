@@ -1,5 +1,3 @@
-from typing import Any
-
 from django_filters import rest_framework as filters
 from rest_framework import status
 from rest_framework.decorators import action
@@ -30,6 +28,13 @@ class QuestionViewSet(BaseModelViewSet):
     filter_backends = [SearchFilter]
     search_fields = ["title", "question_text"]
 
+    def create(self, request, *args, **kwargs):
+        """Создания вопроса"""
+        if request.user.is_staff:
+            return super().create(request, *args, **kwargs)
+        else:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
     @action(
         detail=True,
         methods=["post"],
@@ -57,10 +62,3 @@ class QuestionViewSet(BaseModelViewSet):
         question.answer_check = True
         question.save()
         return Response({"answer_check": True})
-
-    def create(self, request, *args: Any, **kwargs: Any) -> Response:
-        """Создания вопроса"""
-        if request.user.is_staff:
-            return super().create(request, *args, **kwargs)
-        else:
-            return Response(status=status.HTTP_403_FORBIDDEN)

@@ -1,5 +1,3 @@
-from typing import Any
-
 from django.db.models import Count
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
@@ -36,6 +34,13 @@ class SubjectViewSet(BaseModelViewSet):
     filter_backends = [SearchFilter]
     search_fields = ["slug", "title", "courses__title", "courses__slug"]
 
+    def create(self, request, *args, **kwargs):
+        """Создание предмета"""
+        if request.user.is_staff:
+            return super().create(request, *args, **kwargs)
+        else:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
     @action(
         detail=False,
         methods=["get"],
@@ -62,10 +67,3 @@ class SubjectViewSet(BaseModelViewSet):
         annotated_results = self.filter_queryset(self.get_queryset()).annotate(course_count=Count("courses"))
         serializer = self.get_serializer(annotated_results, many=True)
         return Response(serializer.data)
-
-    def create(self, request, *args: Any, **kwargs: Any) -> Response:
-        """Создание предмета"""
-        if request.user.is_staff:
-            return super().create(request, *args, **kwargs)
-        else:
-            return Response(status=status.HTTP_403_FORBIDDEN)

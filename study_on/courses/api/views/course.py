@@ -1,5 +1,3 @@
-from typing import Any
-
 from django.db.models import Count, F
 from django_filters import rest_framework as filters
 from rest_framework import status
@@ -37,13 +35,20 @@ class CourseViewSet(BaseModelViewSet):
     filter_backends = [SearchFilter]
     search_fields = ["slug", "title", "description", "subject__title", "teachers__username", "students__username"]
 
+    def create(self, request, *args, **kwargs):
+        """Создание курса"""
+        if request.user.is_staff:
+            return super().create(request, *args, **kwargs)
+        else:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
     @action(
         detail=True,
         methods=["post"],
-        url_path="register-user-on-course",
+        url_path="register-on-course",
         permission_classes=[IsAuthenticated],
     )
-    def register_user_on_course(self, request, *args, **kwargs):
+    def register_on_course(self, request, *args, **kwargs):
         """Регистрация пользователя на курс"""
         course = self.get_object()
         if course.students.filter(id=request.user.id).exists():
@@ -81,13 +86,6 @@ class CourseViewSet(BaseModelViewSet):
         serializer = self.get_serializer(annotated_results, many=True)
         return Response(serializer.data)
 
-    def create(self, request, *args: Any, **kwargs: Any) -> Response:
-        """Создание курса"""
-        if request.user.is_staff:
-            return super().create(request, *args, **kwargs)
-        else:
-            return Response(status=status.HTTP_403_FORBIDDEN)
-
     @action(
         detail=False,
         methods=["get"],
@@ -121,5 +119,5 @@ class CourseViewSet(BaseModelViewSet):
             )
             .annotate(tests_count=Count("lessons__tests"))
         )
-        serializer = self.get_serializer(uinited_results, many=True)
+        serializer = self.get_serializer(uinited_results)
         return Response(serializer.data)

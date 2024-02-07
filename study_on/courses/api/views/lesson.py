@@ -1,5 +1,3 @@
-from typing import Any
-
 from django_filters import rest_framework as filters
 from rest_framework import status
 from rest_framework.filters import SearchFilter
@@ -33,7 +31,7 @@ class LessonViewSet(BaseModelViewSet):
         "description",
     ]
 
-    def create(self, request, *args: Any, **kwargs: Any) -> Response:
+    def create(self, request, *args, **kwargs):
         """Создание урока"""
         if request.user.is_staff:
             return super().create(request, *args, **kwargs)
