@@ -12,7 +12,7 @@ STUDY_ON_EMAIL = getenv("STUDY_ON_EMAIL", default="test_mail@localhost")
 COURSE_REMINDER_DAYS = getenv("COURSE_REMINDER_DAYS", default=3)
 
 celery_app.conf.beat_schedule = {
-    "add-every-30-seconds": {
+    "add-every-3-days": {
         "task": "study_on.courses.tasks.course_reminder",
         "schedule": timedelta(days=COURSE_REMINDER_DAYS),
         "args": (),
