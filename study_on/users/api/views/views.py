@@ -101,7 +101,7 @@ class UserViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin, GenericV
         serializer_class=ChangePasswordUserSerializer,
     )
     def change_password(self, request, *args, **kwargs):
-        """Верификация пользователя"""
+        """Смена пароля"""
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         code = random.randint(100000, 999999)
@@ -118,7 +118,7 @@ class UserViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin, GenericV
         serializer_class=VerifyChangePasswordUserSerializer,
     )
     def verify_password(self, request, *args, **kwargs):
-        """Верификация пользователя"""
+        """Потверждение смены пароля"""
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = User.objects.get(email=serializer.validated_data["email"])

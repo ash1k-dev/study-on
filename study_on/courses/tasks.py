@@ -5,8 +5,8 @@ from django.core import mail
 from django.db.models import Q
 
 from config import celery_app
-from study_on.courses.email_templates import TEXT_EMAIL_GREETING, TEXT_EMAIL_REMINDER
 from study_on.courses.models import AvailableLessons
+from study_on.courses.templates import TEXT_GREETING, TEXT_REMINDER
 
 STUDY_ON_EMAIL = getenv("STUDY_ON_EMAIL")
 
@@ -26,8 +26,8 @@ def course_reminder():
             student = result.student.username
             student_email = result.student.email
             course_name = result.course.title
-            subject = TEXT_EMAIL_GREETING.substitute(student=student)
-            body = TEXT_EMAIL_REMINDER.substitute(student=student, course_name=course_name)
+            subject = TEXT_GREETING.substitute(student=student)
+            body = TEXT_REMINDER.substitute(student=student, course_name=course_name)
             mail.EmailMessage(
                 subject=subject,
                 body=body,

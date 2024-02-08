@@ -45,7 +45,7 @@ class ListUserSerializer(serializers.ModelSerializer[UserType]):
 
 
 class RegistrationUserSerializer(serializers.ModelSerializer[UserType]):
-    """Верификация пользователя"""
+    """Регистрация пользователя"""
 
     def is_valid(self, raise_exception=False):
         self._check_email_exists()
@@ -98,7 +98,7 @@ class VerificationUserSerializer(serializers.ModelSerializer[UserType]):
 
 
 class ChangePasswordUserSerializer(serializers.ModelSerializer[UserType]):
-    """Верификация пользователя"""
+    """Смена пароля"""
 
     def is_valid(self, raise_exception=False):
         self._check_email_exists()
@@ -117,7 +117,7 @@ class ChangePasswordUserSerializer(serializers.ModelSerializer[UserType]):
 
 
 class VerifyChangePasswordUserSerializer(serializers.ModelSerializer[UserType]):
-    """Верификация пользователя"""
+    """Верификация смены пароля"""
 
     def is_valid(self, raise_exception=False):
         self._check_email_exists()

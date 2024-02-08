@@ -67,7 +67,9 @@ class CourseViewSet(BaseModelViewSet):
     )
     def get_contents(self, request, *args, **kwargs):
         """Получение содержимого курса"""
-        return self.retrieve(request, *args, **kwargs)
+        course = self.get_object()
+        serializer = self.get_serializer(course)
+        return Response(serializer.data)
 
     @action(
         detail=False,
