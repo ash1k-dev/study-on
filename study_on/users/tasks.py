@@ -14,7 +14,7 @@ from study_on.users.templates import (
 User = get_user_model()
 
 
-STUDY_ON_EMAIL = getenv("STUDY_ON_EMAIL")
+STUDY_ON_EMAIL = getenv("STUDY_ON_EMAIL", default="test_mail@localhost")
 
 
 @celery_app.task()
@@ -24,7 +24,7 @@ def get_users_count():
 
 
 @celery_app.task()
-def send_email(user, email_type):
+def send_email(username, email, identification_code, email_type):
     with mail.get_connection() as connection:
         email_type_dict = {
             "confirm": TEXT_IDENTIFICATION,
@@ -32,14 +32,12 @@ def send_email(user, email_type):
             "change_password": TEXT_CHANGE_PASSWORD,
         }
         email_text = email_type_dict.get(email_type)
-        user_name = user.username
-        user_email = user.email
-        subject = TEXT_GREETING.substitute(user=user_name)
-        body = email_text.substitute(user=user_name, code=user.identification_code)
+        subject = TEXT_GREETING.substitute(user=username)
+        body = email_text.substitute(user=username, code=identification_code)
         mail.EmailMessage(
             subject=subject,
             body=body,
             from_email="StudyOn <" + STUDY_ON_EMAIL + ">",
-            to=[user_email],
+            to=[email],
             connection=connection,
         ).send()

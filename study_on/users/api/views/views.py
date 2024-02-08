@@ -1,4 +1,5 @@
 import random
+from os import getenv
 
 from django.contrib.auth import get_user_model
 from django_filters import rest_framework as filters
@@ -22,6 +23,8 @@ from study_on.users.api.serializers import (
 from study_on.users.tasks import send_email
 
 User = get_user_model()
+
+MAX_INCORRECT_ATTEMPTS = getenv("MAX_INCORRECT_ATTEMPTS", default=5)
 
 
 class UserFilter(filters.FilterSet):
@@ -60,14 +63,14 @@ class UserViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin, GenericV
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         code = random.randint(100000, 999999)
-        user = User.objects.create(
-            username=serializer.validated_data["username"],
-            email=serializer.validated_data["email"],
-            password=serializer.validated_data["password"],
+        user = User.objects.create_user(
+            serializer.validated_data["username"],
+            serializer.validated_data["email"],
+            serializer.validated_data["password"],
             is_active=False,
             identification_code=code,
         )
-        send_email(user, "confirm")
+        send_email.delay(user.username, user.email, user.identification_code, "confirm")
         return Response(status=status.HTTP_201_CREATED)
 
     @action(
@@ -89,8 +92,8 @@ class UserViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin, GenericV
             user = User.objects.get(email=serializer.initial_data["email"])
             user.identification_code_entry_attempts += 1
             user.save()
-            if user.identification_code_entry_attempts == 1:
-                send_email(user, "confirm_error")
+            if user.identification_code_entry_attempts == MAX_INCORRECT_ATTEMPTS:
+                send_email.delay(user.username, user.email, user.identification_code, "confirm_error")
                 user.delete()
             return Response(data=e.args[0], status=status.HTTP_400_BAD_REQUEST)
 
@@ -108,7 +111,7 @@ class UserViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin, GenericV
         user = User.objects.get(email=serializer.validated_data["email"])
         user.identification_code = code
         user.save()
-        send_email(user, "change_password")
+        send_email.delay(user.username, user.email, user.identification_code, "change_password")
         return Response(status=status.HTTP_200_OK)
 
     @action(

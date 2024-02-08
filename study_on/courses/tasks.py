@@ -8,7 +8,16 @@ from config import celery_app
 from study_on.courses.models import AvailableLessons
 from study_on.courses.templates import TEXT_GREETING, TEXT_REMINDER
 
-STUDY_ON_EMAIL = getenv("STUDY_ON_EMAIL")
+STUDY_ON_EMAIL = getenv("STUDY_ON_EMAIL", default="test_mail@localhost")
+COURSE_REMINDER_DAYS = getenv("COURSE_REMINDER_DAYS", default=3)
+
+celery_app.conf.beat_schedule = {
+    "add-every-30-seconds": {
+        "task": "study_on.courses.tasks.course_reminder",
+        "schedule": timedelta(days=COURSE_REMINDER_DAYS),
+        "args": (),
+    },
+}
 
 
 @celery_app.task()
