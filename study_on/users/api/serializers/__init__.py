@@ -1,4 +1,5 @@
-from study_on.users.api.serializers.serializers import (
+from study_on.users.api.serializers.reward import RewardSerializer
+from study_on.users.api.serializers.user import (
     ChangePasswordUserSerializer,
     IdentificationCodeValidationError,
     ListUserSerializer,
@@ -16,4 +17,5 @@ __all__ = [
     "VerifyChangePasswordUserSerializer",
     "VerificationUserSerializer",
     "IdentificationCodeValidationError",
+    "RewardSerializer",
 ]

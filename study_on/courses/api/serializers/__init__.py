@@ -3,11 +3,7 @@ from study_on.courses.api.serializers.available_lessons import (
     ListAvailableLessonsSerializer,
     UpdateAvailableLessonsSerializer,
 )
-from study_on.courses.api.serializers.check_knowledge import (
-    CreateTestSerializer,
-    ListTestSerializer,
-    UpdateTestSerializer,
-)
+from study_on.courses.api.serializers.bookmark import BookmarkSerializer
 from study_on.courses.api.serializers.content import (
     CreateContentSerializer,
     ListContentSerializer,
@@ -35,12 +31,18 @@ from study_on.courses.api.serializers.question import (
     QuestionAnswerSerializer,
     UpdateQuestionSerializer,
 )
+from study_on.courses.api.serializers.review import ReviewSerializer
 from study_on.courses.api.serializers.subject import (
     CreateSubjectSerializer,
     ListSubjectSerializer,
     SubjectAmountSerializer,
     SubjectWithCourseSerializer,
     UpdateSubjectSerializer,
+)
+from study_on.courses.api.serializers.survey import (
+    CreateSurveySerializer,
+    ListSurveySerializer,
+    UpdateSurveySerializer,
 )
 
 __all__ = [
@@ -60,9 +62,9 @@ __all__ = [
     "ListContentSerializer",
     "CreateContentSerializer",
     "UpdateContentSerializer",
-    "ListTestSerializer",
-    "CreateTestSerializer",
-    "UpdateTestSerializer",
+    "ListSurveySerializer",
+    "CreateSurveySerializer",
+    "UpdateSurveySerializer",
     "ListQuestionSerializer",
     "CreateQuestionSerializer",
     "UpdateQuestionSerializer",
@@ -74,4 +76,6 @@ __all__ = [
     "CurrentCourseInfoSerializer",
     "CourseInfoSerializer",
     "LessonInfoForCourseSerializer",
+    "ReviewSerializer",
+    "BookmarkSerializer",
 ]

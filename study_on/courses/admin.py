@@ -1,60 +1,104 @@
 from django.contrib import admin
-from django.contrib.admin import register
 
-from study_on.courses.models import AvailableLessons, Content, Course, Lesson, Question, Subject, Test
+from study_on.courses.models import (
+    AvailableLessons,
+    Bookmark,
+    Completion,
+    Content,
+    Course,
+    Heading,
+    Lesson,
+    Question,
+    Review,
+    Subject,
+    Survey,
+)
 
 
-@register(Subject)
+@admin.register(Subject)
 class SubjectAdmin(admin.ModelAdmin):
     """Предметы"""
 
-    list_display = ("title", "slug")
+    list_display = ("id", "title", "slug")
     prepopulated_fields = {"slug": ("title",)}
 
 
-@register(Course)
+@admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
     """Курсы"""
 
-    list_display = ("title", "slug", "subject")
+    list_display = ("id", "title", "slug", "subject")
     list_filter = ("subject",)
+    prepopulated_fields = {"slug": ("title",)}
 
 
-@register(Lesson)
+@admin.register(Lesson)
 class LessonAdmin(admin.ModelAdmin):
     """Уроки"""
 
-    list_display = ("title", "course", "order")
+    list_display = ("id", "title", "course", "order")
     list_filter = ("course",)
 
 
-@register(Content)
+@admin.register(Content)
 class ContentAdmin(admin.ModelAdmin):
     """Контент"""
 
-    list_display = ("lesson", "order")
+    list_display = ("id", "lesson", "order")
     list_filter = ("lesson",)
 
 
-@register(Test)
-class TestAdmin(admin.ModelAdmin):
+@admin.register(Survey)
+class SurveyAdmin(admin.ModelAdmin):
     """Тесты"""
 
-    list_display = ("title", "lesson")
+    list_display = ("id", "title", "lesson")
     list_filter = ("lesson",)
 
 
-@register(Question)
+@admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
     """Вопросы к уроку"""
 
-    list_display = ("title", "order")
+    list_display = ("id", "title", "order")
     list_filter = ("title",)
 
 
-@register(AvailableLessons)
+@admin.register(AvailableLessons)
 class AvailableLessonsAdmin(admin.ModelAdmin):
     """Доступные пользователю уроки курса"""
 
-    list_display = ("course", "student", "max_available_lesson")
+    list_display = ("id", "course", "student", "max_available_lesson")
     list_filter = ("student",)
+
+
+@admin.register(Bookmark)
+class BookmarkAdmin(admin.ModelAdmin):
+    """Закладки"""
+
+    list_display = ("id", "course", "student")
+    list_filter = ("course", "student")
+
+
+@admin.register(Review)
+class ReviewAdmin(admin.ModelAdmin):
+    """Отзывы"""
+
+    list_display = ("id", "course", "student", "grade")
+    list_filter = ("course", "student")
+
+
+@admin.register(Heading)
+class HeadingAdmin(admin.ModelAdmin):
+    """Направления"""
+
+    list_display = ("id", "title")
+    list_filter = ("title",)
+
+
+@admin.register(Completion)
+class CompletionAdmin(admin.ModelAdmin):
+    """Завершенный курс"""
+
+    list_display = ("id", "course", "user")
+    list_filter = ("course", "user")

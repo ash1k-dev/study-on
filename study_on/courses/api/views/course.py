@@ -10,13 +10,15 @@ from rest_framework.response import Response
 
 from study_on.courses.api.permissions import IsAdminOrStuff, IsStudentOrTeacherOnCourse
 from study_on.courses.api.serializers import (
+    BookmarkSerializer,
     CourseInfoSerializer,
     CourseParticipantsAmountSerializer,
     CourseWithContentsSerializer,
     CurrentCourseInfoSerializer,
     ListCourseSerializer,
+    ReviewSerializer,
 )
-from study_on.courses.models import AvailableLessons, Completion, Course
+from study_on.courses.models import AvailableLessons, Bookmark, Completion, Course, Review
 from study_on.services.views import BaseModelViewSet
 from study_on.services.work_with_docx import create_file, upload_file
 
@@ -163,6 +165,36 @@ class CourseViewSet(BaseModelViewSet):
         )
         serializer = self.get_serializer(uinited_results)
         return Response(serializer.data)
+
+    @action(
+        detail=True,
+        methods=["post"],
+        url_path="post-review",
+        permission_classes=[IsAuthenticated],
+        serializer_class=ReviewSerializer,
+    )
+    def post_review(self, request, *args, **kwargs):
+        """Создание отзыва"""
+        if Review.objects.filter(student=request.user, course=self.get_object()).exists():
+            return Response({"review": "already exists"}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            Review.objects.create(student=request.user, course=self.get_object(), text=request.data["text"])
+            return Response(status=status.HTTP_201_CREATED)
+
+    @action(
+        detail=True,
+        methods=["post"],
+        url_path="post-bookmark",
+        permission_classes=[IsAuthenticated],
+        serializer_class=BookmarkSerializer,
+    )
+    def post_bookmark(self, request, *args, **kwargs):
+        """Создание записи в закладках"""
+        if Bookmark.objects.filter(student=request.user, course=self.get_object()).exists():
+            return Response({"bookmark": "already exists"}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            Bookmark.objects.create(student=request.user, course=self.get_object())
+            return Response(status=status.HTTP_201_CREATED)
 
     @action(detail=True, methods=["get"], url_path="get-certificate")
     def get_certificate(self, request, *args, **kwargs):
