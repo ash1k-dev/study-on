@@ -28,6 +28,7 @@ class ListUserSerializer(serializers.ModelSerializer[UserType]):
     class Meta:
         model = User
         fields = [
+            "id",
             "username",
             "name",
             "first_name",

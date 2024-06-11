@@ -9,7 +9,8 @@ class ListCourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = "__all__"
+        # fields = "__all__"
+        fields = ["id", "title", "slug", "subject", "author", "teachers", "students"]
 
 
 class CreateCourseSerializer(serializers.ModelSerializer):
@@ -37,7 +38,14 @@ class CourseParticipantsAmountSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ["id", "subject", "title", "teachers_amount", "students_amount", "lessons_amount"]
+        fields = [
+            "id",
+            "subject",
+            "title",
+            "teachers_amount",
+            "students_amount",
+            "lessons_amount",
+        ]
 
 
 class CourseWithContentsSerializer(serializers.ModelSerializer):

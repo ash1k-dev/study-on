@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.db.models import Count, F
 from django_filters import rest_framework as filters
 from rest_framework import status
@@ -6,7 +8,7 @@ from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from study_on.courses.api.permissions import IsAdminOrStuff, IsStudentOnCourse
+from study_on.courses.api.permissions import IsAdminOrStuff, IsStudentOrTeacherOnCourse
 from study_on.courses.api.serializers import (
     CourseInfoSerializer,
     CourseParticipantsAmountSerializer,
@@ -14,8 +16,9 @@ from study_on.courses.api.serializers import (
     CurrentCourseInfoSerializer,
     ListCourseSerializer,
 )
-from study_on.courses.models import AvailableLessons, Course
+from study_on.courses.models import AvailableLessons, Completion, Course
 from study_on.services.views import BaseModelViewSet
+from study_on.services.work_with_docx import create_file, upload_file
 
 
 class CourseFilter(filters.FilterSet):
@@ -33,7 +36,14 @@ class CourseViewSet(BaseModelViewSet):
     serializer_class = ListCourseSerializer
     filterset_class = CourseFilter
     filter_backends = [SearchFilter]
-    search_fields = ["slug", "title", "description", "subject__title", "teachers__username", "students__username"]
+    search_fields = [
+        "slug",
+        "title",
+        "description",
+        "subject__title",
+        "teachers__username",
+        "students__username",
+    ]
 
     def create(self, request, *args, **kwargs):
         """Создание курса"""
@@ -42,14 +52,27 @@ class CourseViewSet(BaseModelViewSet):
         else:
             return Response(status=status.HTTP_403_FORBIDDEN)
 
+    def list(self, request, *args, **kwargs):
+        """Список курсов"""
+        queryset = self.filter_queryset(self.get_queryset())
+        queryset = queryset.select_related("subject").prefetch_related("teachers", "students", "lessons")
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
     @action(
         detail=True,
         methods=["post"],
-        url_path="register-on-course",
+        url_path="register-student-on-course",
         permission_classes=[IsAuthenticated],
     )
-    def register_on_course(self, request, *args, **kwargs):
-        """Регистрация пользователя на курс"""
+    def register_student_on_course(self, request, *args, **kwargs):
+        """Регистрация студента на курс"""
         course = self.get_object()
         if course.students.filter(id=request.user.id).exists():
             return Response({"registration": False})
@@ -60,10 +83,27 @@ class CourseViewSet(BaseModelViewSet):
 
     @action(
         detail=True,
+        methods=["post"],
+        url_path="register-teacher-on-course",
+        permission_classes=[IsAuthenticated],
+    )
+    def register_teacher_on_course(self, request, *args, **kwargs):
+        """Регистрация учителя на курс"""
+        course = self.get_object()
+        if course.teachers.filter(id=request.data["teachers"]).exists():
+            print(request.data)
+            return Response({"registration": False})
+        else:
+            print(request.data)
+            course.teachers.add(request.data["teachers"])
+            return Response({"registration": True})
+
+    @action(
+        detail=True,
         methods=["get"],
         url_path="get-contents",
         serializer_class=CourseWithContentsSerializer,
-        permission_classes=[IsStudentOnCourse],
+        permission_classes=[IsStudentOrTeacherOnCourse],
     )
     def get_contents(self, request, *args, **kwargs):
         """Получение содержимого курса"""
@@ -111,7 +151,7 @@ class CourseViewSet(BaseModelViewSet):
         permission_classes=[IsAdminOrStuff],
     )
     def get_current_course_info(self, request, *args, **kwargs):
-        """Получение информации о курсe(название, описание, преподаватели, уроки, кол-во тестов)"""
+        """Получение информации о курсе (название, описание, преподаватели, уроки, кол-во тестов)"""
         uinited_results = (
             self.filter_queryset(self.get_queryset())
             .prefetch_related("teachers")
@@ -123,3 +163,16 @@ class CourseViewSet(BaseModelViewSet):
         )
         serializer = self.get_serializer(uinited_results)
         return Response(serializer.data)
+
+    @action(detail=True, methods=["get"], url_path="get-certificate")
+    def get_certificate(self, request, *args, **kwargs):
+        """Получение сертификата о прохождении курса"""
+        user = request.user
+        course = self.get_object()
+        if not Completion.objects.filter(user=user, course=course).exists():
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        context = {"user": user, "course": course, "date": datetime.now().strftime("%Y-%m-%d")}
+        template_path = "study_on/courses/api/templates/certificate.docx"
+        file_path = f"study_on/courses/api/templates/{user.username}"
+        create_file(context, template_path, file_path)
+        return upload_file(file_path, request.user)
