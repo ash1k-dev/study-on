@@ -1,27 +1,27 @@
 from rest_framework import serializers
 
-from study_on.courses.models import Test
+from study_on.courses.models import Survey
 
 
-class ListTestSerializer(serializers.ModelSerializer):
+class ListSurveySerializer(serializers.ModelSerializer):
     """Список тестов"""
 
     class Meta:
-        model = Test
+        model = Survey
         fields = "__all__"
 
 
-class CreateTestSerializer(serializers.ModelSerializer):
+class CreateSurveySerializer(serializers.ModelSerializer):
     """Создание теста"""
 
     class Meta:
-        model = Test
+        model = Survey
         fields = "__all__"
 
 
-class UpdateTestSerializer(serializers.ModelSerializer):
+class UpdateSurveySerializer(serializers.ModelSerializer):
     """Обновление теста"""
 
     class Meta:
-        model = Test
+        model = Survey
         fields = "__all__"

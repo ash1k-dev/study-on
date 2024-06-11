@@ -5,6 +5,7 @@ from django.contrib.auth import decorators, get_user_model
 from django.utils.translation import gettext_lazy as _
 
 from study_on.users.forms import UserAdminChangeForm, UserAdminCreationForm
+from study_on.users.models import Reward
 
 User = get_user_model()
 
@@ -22,7 +23,15 @@ class UserAdmin(auth_admin.UserAdmin):
         (None, {"fields": ("username", "password")}),
         (
             _("Personal info"),
-            {"fields": ("name", "email", "identification_code", "identification_code_entry_attempts")},
+            {
+                "fields": (
+                    "name",
+                    "email",
+                    "identification_code",
+                    "identification_code_entry_attempts",
+                    "reward",
+                )
+            },
         ),
         (
             _("Permissions"),
@@ -39,8 +48,20 @@ class UserAdmin(auth_admin.UserAdmin):
         (_("Important dates"), {"fields": ("last_login", "date_joined")}),
     )
     list_display = [
+        "id",
         "username",
         "name",
         "is_superuser",
     ]
     search_fields = ["name"]
+
+
+@admin.register(Reward)
+class RewardAdmin(admin.ModelAdmin):
+    list_display = [
+        "id",
+        "title",
+        "reward_type",
+        "reward_value",
+    ]
+    search_fields = ["title"]

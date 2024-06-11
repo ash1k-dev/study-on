@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
 
-from study_on.courses.api.permissions import IsAdminOrStuff, IsStudentOnCourse, IsTeacherOnCourse
+from study_on.courses.api.permissions import IsStudentOrTeacherOnCourse
 from study_on.courses.api.serializers import ListContentSerializer
 from study_on.courses.models import Content
 from study_on.services.views import BaseModelViewSet
@@ -22,7 +22,7 @@ class ContentViewSet(BaseModelViewSet):
 
     queryset = Content.objects.all()
     serializer_class = ListContentSerializer
-    permission_classes = (IsStudentOnCourse, IsTeacherOnCourse, IsAdminOrStuff)
+    permission_classes = (IsStudentOrTeacherOnCourse,)
     filterset_class = ContentFilter
     filter_backends = [SearchFilter]
     search_fields = ["lesson__title", "lesson__course__title"]

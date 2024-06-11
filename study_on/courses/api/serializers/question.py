@@ -32,4 +32,5 @@ class QuestionAnswerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Question
-        fields = ("answer_text",)
+        fields = "__all__"
+        # fields = ("answer_text",)

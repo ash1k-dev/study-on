@@ -8,11 +8,15 @@ class IsAdminOrStuff(BasePermission):
         return request.user and request.user.is_staff
 
 
-class IsStudentOnCourse(BasePermission):
-    """Проверка является ли пользователь студентом на курсе"""
+class IsStudentOrTeacherOnCourse(BasePermission):
+    """Проверка является ли пользователь студентом или преподавателем на курсе"""
 
     def has_object_permission(self, request, view, obj):
-        return obj.students.filter(id=request.user.id).exists()
+        return (
+            obj.students.filter(id=request.user.id).exists()
+            or obj.teachers.filter(id=request.user.id).exists()
+            or request.user.is_staff
+        )
 
 
 class IsTeacherOnCourse(BasePermission):
