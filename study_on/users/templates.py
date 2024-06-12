@@ -23,4 +23,11 @@ TEXT_CHANGE_PASSWORD = Template(
     "Пожалуйста, введите этот код на сайте\n"
 )
 
+TEXT_REWARD = Template(
+    "<b>Здравствуйте, ${user}</b>\n"
+    "Вы получили награду на сервисе StudyOn:\n"
+    "${reward}\n"
+    "Все ваши награды можно посмотреть в профиле\n"
+)
+
 TEXT_GREETING = Template("Здравствуйте, ${user}. Вас приветствует сервис StudyOn")

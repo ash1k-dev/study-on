@@ -1,15 +1,12 @@
 from datetime import datetime, timedelta
-from os import getenv
 
 from django.core import mail
 from django.db.models import Q
 
 from config import celery_app
+from config.settings.base import COURSE_REMINDER_DAYS, STUDY_ON_EMAIL
 from study_on.courses.models import AvailableLessons
 from study_on.courses.templates import TEXT_GREETING, TEXT_REMINDER
-
-STUDY_ON_EMAIL = getenv("STUDY_ON_EMAIL", default="test_mail@localhost")
-COURSE_REMINDER_DAYS = getenv("COURSE_REMINDER_DAYS", default=3)
 
 celery_app.conf.beat_schedule = {
     "add-every-3-days": {
@@ -22,16 +19,14 @@ celery_app.conf.beat_schedule = {
 
 @celery_app.task()
 def course_reminder():
-    uinited_results = (
+    """Напоминание студентам о незаконченом курсе"""
+    united_results = (
         AvailableLessons.objects.all()
-        .prefetch_related("student")
-        .prefetch_related(
-            "course",
-        )
+        .select_related("student", "course")
         .filter(Q(updated__lt=datetime.now() - timedelta(days=3)))
     )
     with mail.get_connection() as connection:
-        for result in uinited_results:
+        for result in united_results:
             student = result.student.username
             student_email = result.student.email
             course_name = result.course.title

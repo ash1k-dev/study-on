@@ -9,6 +9,7 @@ from study_on.users.templates import (
     TEXT_GREETING,
     TEXT_IDENTIFICATION,
     TEXT_REPEATED_IDENTIFICATION_ERROR,
+    TEXT_REWARD,
 )
 
 User = get_user_model()
@@ -24,16 +25,20 @@ def get_users_count():
 
 
 @celery_app.task()
-def send_email(username, email, identification_code, email_type):
+def send_email(username, email, email_type, reward=None, identification_code=None):
     with mail.get_connection() as connection:
         email_type_dict = {
             "confirm": TEXT_IDENTIFICATION,
             "confirm_error": TEXT_REPEATED_IDENTIFICATION_ERROR,
             "change_password": TEXT_CHANGE_PASSWORD,
+            "reward": TEXT_REWARD,
         }
         email_text = email_type_dict.get(email_type)
         subject = TEXT_GREETING.substitute(user=username)
-        body = email_text.substitute(user=username, code=identification_code)
+        if email_type == "reward":
+            body = email_text.substitute(user=username, reward=reward)
+        else:
+            body = email_text.substitute(user=username, code=identification_code)
         mail.EmailMessage(
             subject=subject,
             body=body,
