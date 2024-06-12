@@ -31,6 +31,8 @@ from study_on.users.tasks import send_email
 User = get_user_model()
 
 MAX_INCORRECT_ATTEMPTS = getenv("MAX_INCORRECT_ATTEMPTS", default=5)
+TEMPLATE_PATH = getenv("PLAN_TEMPLATE_PATH", default="study_on/users/api/templates/plan.docx")
+FILE_PATH = getenv("PLAN_FILE_PATH", default="study_on/users/api/templates")
 
 
 class UserFilter(filters.FilterSet):
@@ -166,8 +168,8 @@ class UserViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin, GenericV
                     f" (пройдено {lessons_before} из {lessons_before + lessons_after} уроков)"
                 )
         context = {"data": course_progress, "user": request.user, "date": datetime.now().strftime("%Y-%m-%d")}
-        template_path = "study_on/users/api/templates/plan.docx"
-        file_path = f"study_on/users/api/templates/{request.user.username}.docx"
+        template_path = TEMPLATE_PATH
+        file_path = f"{FILE_PATH}/{request.user.username}"
         create_file(context, template_path, file_path)
         return upload_file(file_path, request.user)
 

@@ -1,4 +1,5 @@
 from datetime import datetime
+from os import getenv
 
 from django.db.models import Count, F
 from django_filters import rest_framework as filters
@@ -21,6 +22,9 @@ from study_on.courses.api.serializers import (
 from study_on.courses.models import AvailableLessons, Bookmark, Completion, Course, Review
 from study_on.services.views import BaseModelViewSet
 from study_on.services.work_with_docx import create_file, upload_file
+
+TEMPLATE_PATH = getenv("CERTIFICATE_TEMPLATE_PATH", default="study_on/courses/api/templates/certificate.docx")
+FILE_PATH = getenv("CERTIFICATE_FILE_PATH", default="study_on/courses/api/templates")
 
 
 class CourseFilter(filters.FilterSet):
@@ -204,7 +208,7 @@ class CourseViewSet(BaseModelViewSet):
         if not Completion.objects.filter(user=user, course=course).exists():
             return Response(status=status.HTTP_404_NOT_FOUND)
         context = {"user": user, "course": course, "date": datetime.now().strftime("%Y-%m-%d")}
-        template_path = "study_on/courses/api/templates/certificate.docx"
-        file_path = f"study_on/courses/api/templates/{user.username}"
+        template_path = TEMPLATE_PATH
+        file_path = f"{FILE_PATH}/{user.username}"
         create_file(context, template_path, file_path)
         return upload_file(file_path, request.user)
