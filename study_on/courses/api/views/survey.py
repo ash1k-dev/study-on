@@ -4,7 +4,7 @@ from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
 
 from study_on.courses.api.permissions import IsStudentOrTeacherOnCourse
-from study_on.courses.api.serializers import ListSurveySerializer
+from study_on.courses.api.serializers import SurveySerializer
 from study_on.courses.models import Survey
 from study_on.services.views import BaseModelViewSet
 
@@ -21,7 +21,7 @@ class SurveyViewSet(BaseModelViewSet):
     """Тест урока"""
 
     queryset = Survey.objects.all()
-    serializer_class = ListSurveySerializer
+    serializer_class = SurveySerializer
     permission_classes = (IsStudentOrTeacherOnCourse,)
     filterset_class = SurveyFilter
     filter_backends = [SearchFilter]

@@ -15,7 +15,7 @@ class Survey(BaseModel):
     )
     title = models.CharField(max_length=200, verbose_name=_("Заголовок"))
     description = models.TextField(max_length=500, verbose_name=_("Описание"))
-    answer_check = models.BooleanField(default=False, verbose_name=_("Правильность"))
+    # answer_check = models.BooleanField(default=False, verbose_name=_("Правильность"))
     is_published = models.BooleanField(default=False, verbose_name=_("Активен"))
 
     class Meta:

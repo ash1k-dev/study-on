@@ -15,9 +15,7 @@ class Question(BaseModel):
         verbose_name=_("Тест"),
     )
     title = models.CharField(max_length=200, verbose_name=_("Заголовок"))
-    question_text = models.TextField(max_length=400, verbose_name=_("Текст вопроса"))
-    answer_text = models.TextField(max_length=500, blank=True, verbose_name=_("Текст ответа"))
-    answer_check = models.BooleanField(default=False, verbose_name=_("Правильность"))
+    text = models.TextField(max_length=400, verbose_name=_("Текст вопроса"))
     order = OrderField(blank=True, for_fields=["survey"], verbose_name=_("Порядок"))
     is_published = models.BooleanField(default=False, verbose_name=_("Активен"))
 

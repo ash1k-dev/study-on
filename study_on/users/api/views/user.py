@@ -12,7 +12,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
-from study_on.courses.api.serializers import ListAvailableLessonsSerializer, QuestionAnswerSerializer
+from study_on.courses.api.serializers import AvailableLessonsSerializer, QuestionAnswerSerializer
 from study_on.courses.models import AvailableLessons, Lesson, Question
 from study_on.services.work_with_docx import create_file, upload_file
 from study_on.users.api.serializers import (
@@ -143,7 +143,7 @@ class UserViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin, GenericV
         methods=["get"],
         url_path="get-plan",
         queryset=AvailableLessons.objects.all(),
-        serializer_class=ListAvailableLessonsSerializer,
+        serializer_class=AvailableLessonsSerializer,
     )
     def get_courses_plan(self, request, *args, **kwargs):
         """Получение сводного файла по курсам"""

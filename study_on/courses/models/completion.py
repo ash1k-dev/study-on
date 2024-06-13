@@ -17,11 +17,11 @@ class Completion(BaseModel):
         related_name="completions",
         verbose_name=_("Курс"),
     )
-    user = models.ForeignKey(
+    student = models.ForeignKey(
         "users.User",
         on_delete=models.CASCADE,
         related_name="completions",
-        verbose_name=_("Пользователь"),
+        verbose_name=_("Студент"),
     )
 
     class Meta:
@@ -34,7 +34,7 @@ class Completion(BaseModel):
 def check_reward(sender, instance, created, **kwargs):
     """Получение награды за прохождение курса"""
     if created:
-        completion_count = Completion.objects.filter(user=instance.user).count()
+        completion_count = Completion.objects.filter(student=instance.user).count()
         if completion_count == 1:
             reward = Reward.objects.get(title="За прохождение первого курса")
             instance.user.reward.add(reward)

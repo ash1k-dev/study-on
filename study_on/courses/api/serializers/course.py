@@ -13,22 +13,6 @@ class ListCourseSerializer(serializers.ModelSerializer):
         fields = ["id", "title", "slug", "subject", "author", "teachers", "students"]
 
 
-class CreateCourseSerializer(serializers.ModelSerializer):
-    """Создание курса"""
-
-    class Meta:
-        model = Course
-        fields = "__all__"
-
-
-class UpdateCourseSerializer(serializers.ModelSerializer):
-    """Обновление курса"""
-
-    class Meta:
-        model = Course
-        fields = "__all__"
-
-
 class CourseParticipantsAmountSerializer(serializers.ModelSerializer):
     """Количество участников (студентов и учителей) курса"""
 

@@ -8,11 +8,7 @@ from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
 
 from study_on.courses.api.permissions import IsAdminOrStuff
-from study_on.courses.api.serializers import (
-    ListSubjectSerializer,
-    SubjectAmountSerializer,
-    SubjectWithCourseSerializer,
-)
+from study_on.courses.api.serializers import SubjectAmountSerializer, SubjectSerializer, SubjectWithCourseSerializer
 from study_on.courses.models import Subject
 from study_on.services.views import BaseModelViewSet
 
@@ -29,7 +25,7 @@ class SubjectViewSet(BaseModelViewSet):
     """Предмет"""
 
     queryset = Subject.objects.all()
-    serializer_class = ListSubjectSerializer
+    serializer_class = SubjectSerializer
     filterset_class = SubjectFilter
     filter_backends = [SearchFilter]
     search_fields = ["slug", "title", "courses__title", "courses__slug"]
@@ -50,7 +46,12 @@ class SubjectViewSet(BaseModelViewSet):
     )
     def get_subjects_with_courses(self, request):
         """Получение предметов с курсами"""
-        queryset = self.filter_queryset(self.get_queryset()).filter(courses__isnull=False).distinct()
+        queryset = (
+            self.filter_queryset(self.get_queryset())
+            .filter(courses__isnull=False)
+            .distinct()
+            .annotate(course_count=Count("courses"))
+        )
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 

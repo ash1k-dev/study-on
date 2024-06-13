@@ -3,24 +3,8 @@ from rest_framework import serializers
 from study_on.courses.models import Question
 
 
-class ListQuestionSerializer(serializers.ModelSerializer):
+class QuestionSerializer(serializers.ModelSerializer):
     """Список вопросов"""
-
-    class Meta:
-        model = Question
-        fields = "__all__"
-
-
-class CreateQuestionSerializer(serializers.ModelSerializer):
-    """Создание вопроса"""
-
-    class Meta:
-        model = Question
-        fields = "__all__"
-
-
-class UpdateQuestionSerializer(serializers.ModelSerializer):
-    """Обновление вопроса"""
 
     class Meta:
         model = Question

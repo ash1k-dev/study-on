@@ -4,7 +4,7 @@ from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
 
 from study_on.courses.api.permissions import IsStudentOrTeacherOnCourse
-from study_on.courses.api.serializers import ListLessonSerializer
+from study_on.courses.api.serializers import LessonSerializer
 from study_on.courses.models import Lesson
 from study_on.services.views import BaseModelViewSet
 
@@ -21,7 +21,7 @@ class LessonViewSet(BaseModelViewSet):
     """Урок"""
 
     queryset = Lesson.objects.all()
-    serializer_class = ListLessonSerializer
+    serializer_class = LessonSerializer
     permission_classes = (IsStudentOrTeacherOnCourse,)
     filterset_class = LessonFilter
     filter_backends = [SearchFilter]

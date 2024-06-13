@@ -1,27 +1,11 @@
 from rest_framework import serializers
 
-from study_on.courses.api.serializers.content import ListContentSerializer
+from study_on.courses.api.serializers.content import ContentSerializer
 from study_on.courses.models import Lesson
 
 
-class ListLessonSerializer(serializers.ModelSerializer):
+class LessonSerializer(serializers.ModelSerializer):
     """Список уроков"""
-
-    class Meta:
-        model = Lesson
-        fields = "__all__"
-
-
-class CreateLessonSerializer(serializers.ModelSerializer):
-    """Создание урока"""
-
-    class Meta:
-        model = Lesson
-        fields = "__all__"
-
-
-class UpdateLessonSerializer(serializers.ModelSerializer):
-    """Обновление урока"""
 
     class Meta:
         model = Lesson
@@ -31,7 +15,7 @@ class UpdateLessonSerializer(serializers.ModelSerializer):
 class LessonWithContentsSerializer(serializers.ModelSerializer):
     """Урок с содержанием"""
 
-    contents = ListContentSerializer(many=True)
+    contents = ContentSerializer(many=True)
 
     class Meta:
         model = Lesson
