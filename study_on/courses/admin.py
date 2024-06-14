@@ -1,6 +1,7 @@
 from django.contrib import admin
 
 from study_on.courses.models import (
+    Answer,
     AvailableLessons,
     Bookmark,
     Completion,
@@ -12,6 +13,7 @@ from study_on.courses.models import (
     Review,
     Subject,
     Survey,
+    SurveyStudent,
 )
 
 
@@ -100,5 +102,21 @@ class HeadingAdmin(admin.ModelAdmin):
 class CompletionAdmin(admin.ModelAdmin):
     """Завершенный курс"""
 
-    list_display = ("id", "course", "user")
-    list_filter = ("course", "user")
+    list_display = ("id", "course", "student")
+    list_filter = ("course", "student")
+
+
+@admin.register(Answer)
+class AnswerAdmin(admin.ModelAdmin):
+    """Ответы"""
+
+    list_display = ("id", "question", "text")
+    list_filter = ("question",)
+
+
+@admin.register(SurveyStudent)
+class SurveyStudentAdmin(admin.ModelAdmin):
+    """Студенты курса"""
+
+    list_display = ("id", "student")
+    list_filter = ("student",)

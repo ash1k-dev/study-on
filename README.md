@@ -21,7 +21,7 @@
 - CELERY_BROCKER_URL (полный url к Вашему Redis (redis://localhost:6379/0))
 - USE_DOCKER (значение 'yes'')
 3. Запустите контейнеры с помощью docker-compose
-4. Проведите миграции:![img.png](img.png)
+4. Проведите миграции:
  - docker-compose exec web python manage.py makemigrations
 - docker-compose exec web python manage.py migrate
 5. Создайте superuser:

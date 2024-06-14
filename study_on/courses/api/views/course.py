@@ -205,7 +205,7 @@ class CourseViewSet(BaseModelViewSet):
         """Получение сертификата о прохождении курса"""
         user = request.user
         course = self.get_object()
-        if not Completion.objects.filter(user=user, course=course).exists():
+        if not Completion.objects.filter(student=user, course=course).exists():
             return Response(status=status.HTTP_404_NOT_FOUND)
         context = {"user": user, "course": course, "date": datetime.now().strftime("%Y-%m-%d")}
         template_path = TEMPLATE_PATH

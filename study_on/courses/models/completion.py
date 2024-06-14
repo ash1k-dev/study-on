@@ -27,23 +27,23 @@ class Completion(BaseModel):
     class Meta:
         verbose_name = _("Завершенный курс")
         verbose_name_plural = _("Завершенные курсы")
-        constraints = [models.UniqueConstraint(fields=["course", "user"], name="unique_completion")]
+        constraints = [models.UniqueConstraint(fields=["course", "student"], name="unique_completion")]
 
 
 @receiver(post_save, sender=Completion)
 def check_reward(sender, instance, created, **kwargs):
     """Получение награды за прохождение курса"""
     if created:
-        completion_count = Completion.objects.filter(student=instance.user).count()
+        completion_count = Completion.objects.filter(student=instance.student).count()
         if completion_count == 1:
             reward = Reward.objects.get(title="За прохождение первого курса")
-            instance.user.reward.add(reward)
-            send_email.delay(instance.user.username, instance.user.email, reward.title, "reward")
+            instance.student.reward.add(reward)
+            send_email.delay(instance.student.username, instance.student.email, reward.title, "reward")
         elif completion_count == 5:
             reward = Reward.objects.get(title="За прохождение пяти курсов")
-            instance.user.reward.add(reward)
-            send_email.delay(instance.user.username, instance.user.email, reward.title, "reward")
+            instance.student.reward.add(reward)
+            send_email.delay(instance.student.username, instance.student.email, reward.title, "reward")
         elif completion_count == 10:
             reward = Reward.objects.get(title="За прохождение десяти курсов")
-            instance.user.reward.add(reward)
-            send_email.delay(instance.user.username, instance.user.email, reward.title, "reward")
+            instance.student.reward.add(reward)
+            send_email.delay(instance.student.username, instance.student.email, reward.title, "reward")
