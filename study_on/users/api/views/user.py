@@ -150,7 +150,8 @@ class UserViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin, GenericV
         available_lessons = AvailableLessons.objects.filter(student=request.user)
         if not available_lessons:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        course_progress = []
+        courses_ended = []
+        courses_progress = []
         for available_lesson in available_lessons:
             course = available_lesson.course
             lessons_before = Lesson.objects.filter(
@@ -160,14 +161,29 @@ class UserViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin, GenericV
                 course=course, order__gt=available_lesson.max_available_lesson
             ).count()
             if lessons_before == 0:
-                course_progress.append({"course": course, "progress": 0})
+                courses_progress.append({"course": course, "progress": 0})
             else:
                 progress = lessons_before / (lessons_before + lessons_after) * 100
-                course_progress.append(
-                    f"Курс {course.title}: прогресс {round(progress, 2)}%"
-                    f" (пройдено {lessons_before} из {lessons_before + lessons_after} уроков)"
-                )
-        context = {"data": course_progress, "user": request.user, "date": datetime.now().strftime("%Y-%m-%d")}
+                if progress == 100:
+                    courses_ended.append(
+                        f"Курс {course.title}\n"
+                        f"Начало курса: {available_lesson.created.strftime('%Y-%m-%d')}\n"
+                        f"Окончание курса: {available_lesson.updated.strftime('%Y-%m-%d')}\n\n"
+                    )
+                else:
+                    courses_progress.append(
+                        f"Курс {course.title}\n"
+                        f"Прогресс: {int(progress)}% \n"
+                        f"Пройдено: {lessons_before} из {lessons_before + lessons_after} уроков\n"
+                        f"Начало курса: {available_lesson.created.strftime('%Y-%m-%d')}\n"
+                        f"Дата последнего пройденного урока: {available_lesson.updated.strftime('%Y-%m-%d')}\n\n"
+                    )
+        context = {
+            "courses_ended": courses_ended,
+            "courses_progress": courses_progress,
+            "user": request.user,
+            "date": datetime.now().strftime("%Y-%m-%d"),
+        }
         template_path = TEMPLATE_PATH
         file_path = f"{FILE_PATH}/{request.user.username}"
         create_file(context, template_path, file_path)
