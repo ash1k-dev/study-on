@@ -7,6 +7,7 @@ from study_on.courses.api.views import (
     BookmarkViewSet,
     ContentViewSet,
     CourseViewSet,
+    HeadingViewSet,
     LessonViewSet,
     QuestionViewSet,
     ReviewViewSet,
@@ -31,6 +32,7 @@ router.register("available-lessons", AvailableLessonsViewSet)
 router.register("blog", PostViewSet)
 router.register("bookmarks", BookmarkViewSet)
 router.register("reviews", ReviewViewSet)
+router.register("headings", HeadingViewSet)
 
 
 app_name = "api"
