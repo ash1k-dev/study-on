@@ -1,6 +1,7 @@
 from django_filters import rest_framework as filters
 from rest_framework.filters import SearchFilter
 
+from study_on.courses.api.permissions import IsAdminOrStuff
 from study_on.courses.api.serializers import HeadingSerializer
 from study_on.courses.models import Heading
 from study_on.services.views import BaseModelViewSet
@@ -19,6 +20,7 @@ class HeadingViewSet(BaseModelViewSet):
 
     queryset = Heading.objects.all()
     serializer_class = HeadingSerializer
+    permission_classes = (IsAdminOrStuff,)
     filterset_class = HeadingFilter
     filter_backends = [SearchFilter]
     search_fields = [
