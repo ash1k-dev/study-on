@@ -14,9 +14,9 @@ from study_on.courses.api.serializers import (
     BookmarkSerializer,
     CourseInfoSerializer,
     CourseParticipantsAmountSerializer,
+    CourseSerializer,
     CourseWithContentsSerializer,
     CurrentCourseInfoSerializer,
-    ListCourseSerializer,
     ReviewSerializer,
 )
 from study_on.courses.models import AvailableLessons, Bookmark, Completion, Course, Review
@@ -39,7 +39,7 @@ class CourseViewSet(BaseModelViewSet):
     """Курс"""
 
     queryset = Course.objects.all()
-    serializer_class = ListCourseSerializer
+    serializer_class = CourseSerializer
     filterset_class = CourseFilter
     filter_backends = [SearchFilter]
     search_fields = [

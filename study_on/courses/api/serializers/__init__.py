@@ -4,9 +4,9 @@ from study_on.courses.api.serializers.content import ContentSerializer
 from study_on.courses.api.serializers.course import (
     CourseInfoSerializer,
     CourseParticipantsAmountSerializer,
+    CourseSerializer,
     CourseWithContentsSerializer,
     CurrentCourseInfoSerializer,
-    ListCourseSerializer,
 )
 from study_on.courses.api.serializers.heading import HeadingSerializer
 from study_on.courses.api.serializers.lesson import (
@@ -27,7 +27,7 @@ __all__ = [
     "SubjectSerializer",
     "SubjectWithCourseSerializer",
     "SubjectAmountSerializer",
-    "ListCourseSerializer",
+    "CourseSerializer",
     "CourseWithContentsSerializer",
     "CourseParticipantsAmountSerializer",
     "LessonSerializer",

@@ -7,7 +7,7 @@ from study_on.courses.models import Heading
 
 
 @pytest.mark.django_db
-def test_heading_list_admin(admin_api_client, unauthorized_api_client):
+def test_heading_list(admin_api_client, unauthorized_api_client):
     """Проверка получения списка направлений"""
     baker.make(Heading, _quantity=5)
     url = reverse("api:heading-list")
@@ -21,7 +21,7 @@ def test_heading_list_admin(admin_api_client, unauthorized_api_client):
 
 
 @pytest.mark.django_db
-def test_heading_create_admin(admin_api_client, unauthorized_api_client):
+def test_heading_create(admin_api_client, unauthorized_api_client):
     """Проверка создания направления"""
     url = reverse("api:heading-list")
     data = {"title": "test", "description": "test", "is_published": True}
@@ -38,7 +38,7 @@ def test_heading_create_admin(admin_api_client, unauthorized_api_client):
 
 
 @pytest.mark.django_db
-def test_heading_detail_admin(admin_api_client, unauthorized_api_client):
+def test_heading_detail(admin_api_client, unauthorized_api_client):
     """Проверка получения конкретного направления"""
     heading = baker.make(Heading)
     url = reverse("api:heading-detail", args=[heading.id])
@@ -55,7 +55,7 @@ def test_heading_detail_admin(admin_api_client, unauthorized_api_client):
 
 
 @pytest.mark.django_db
-def test_heading_update_admin(admin_api_client, unauthorized_api_client):
+def test_heading_update(admin_api_client, unauthorized_api_client):
     """Проверка изменения направления"""
     heading = baker.make(Heading)
     url = reverse("api:heading-detail", args=[heading.id])
@@ -72,7 +72,7 @@ def test_heading_update_admin(admin_api_client, unauthorized_api_client):
 
 
 @pytest.mark.django_db
-def test_heading_delete_admin(admin_api_client, unauthorized_api_client):
+def test_heading_delete(admin_api_client, unauthorized_api_client):
     """Проверка удаления направления"""
     heading = baker.make(Heading)
     url = reverse("api:heading-detail", args=[heading.id])

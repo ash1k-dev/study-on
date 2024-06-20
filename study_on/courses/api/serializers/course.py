@@ -4,7 +4,7 @@ from study_on.courses.api.serializers.lesson import LessonInfoForCourseSerialize
 from study_on.courses.models import Course
 
 
-class ListCourseSerializer(serializers.ModelSerializer):
+class CourseSerializer(serializers.ModelSerializer):
     """Список курсов"""
 
     class Meta:
