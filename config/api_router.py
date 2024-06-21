@@ -3,8 +3,10 @@ from rest_framework.routers import DefaultRouter, SimpleRouter
 
 from study_on.blog.api.views.blog import PostViewSet
 from study_on.courses.api.views import (
+    AnswerViewSet,
     AvailableLessonsViewSet,
     BookmarkViewSet,
+    CompletionViewSet,
     ContentViewSet,
     CourseViewSet,
     HeadingViewSet,
@@ -33,6 +35,8 @@ router.register("blog", PostViewSet)
 router.register("bookmarks", BookmarkViewSet)
 router.register("reviews", ReviewViewSet)
 router.register("headings", HeadingViewSet)
+router.register("completion", CompletionViewSet)
+router.register("answer", AnswerViewSet)
 
 
 app_name = "api"
