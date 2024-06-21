@@ -4,7 +4,7 @@ from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
 
-from study_on.courses.api.permissions import IsAdminOrStuff, IsStudentOrTeacherOnCourse, IsTeacherOnCourse
+from study_on.courses.api.permissions import IsAdminOrStuff, IsTeacherOnCourse
 from study_on.courses.api.serializers import QuestionAnswerSerializer, QuestionSerializer
 from study_on.courses.models import Question
 from study_on.services.views import BaseModelViewSet
@@ -23,7 +23,7 @@ class QuestionViewSet(BaseModelViewSet):
 
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
-    permission_classes = (IsStudentOrTeacherOnCourse,)
+    permission_classes = (IsAdminOrStuff,)
     filterset_class = QuestionFilter
     filter_backends = [SearchFilter]
     search_fields = ["title", "question_text"]
