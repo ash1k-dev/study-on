@@ -47,3 +47,5 @@ def check_reward(sender, instance, created, **kwargs):
             reward = Reward.objects.get(title="За прохождение десяти курсов")
             instance.student.reward.add(reward)
             send_email.delay(instance.student.username, instance.student.email, reward.title, "reward")
+        else:
+            pass

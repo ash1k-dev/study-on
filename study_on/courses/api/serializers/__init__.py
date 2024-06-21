@@ -1,5 +1,7 @@
+from study_on.courses.api.serializers.answer import AnswerSerializer
 from study_on.courses.api.serializers.available_lessons import AvailableLessonsSerializer
 from study_on.courses.api.serializers.bookmark import BookmarkSerializer
+from study_on.courses.api.serializers.completion import CompletionSerializer
 from study_on.courses.api.serializers.content import ContentSerializer
 from study_on.courses.api.serializers.course import (
     CourseInfoSerializer,
@@ -43,4 +45,6 @@ __all__ = [
     "ReviewSerializer",
     "BookmarkSerializer",
     "HeadingSerializer",
+    "AnswerSerializer",
+    "CompletionSerializer",
 ]

@@ -1,5 +1,7 @@
+from study_on.courses.api.views.answer import AnswerViewSet
 from study_on.courses.api.views.available_lessons import AvailableLessonsViewSet
 from study_on.courses.api.views.bookmark import BookmarkViewSet
+from study_on.courses.api.views.complition import CompletionViewSet
 from study_on.courses.api.views.content import ContentViewSet
 from study_on.courses.api.views.course import CourseViewSet
 from study_on.courses.api.views.heading import HeadingViewSet
@@ -20,4 +22,6 @@ __all__ = [
     "BookmarkViewSet",
     "ReviewViewSet",
     "HeadingViewSet",
+    "CompletionViewSet",
+    "AnswerViewSet",
 ]
