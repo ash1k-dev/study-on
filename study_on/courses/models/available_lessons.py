@@ -11,13 +11,13 @@ class AvailableLessons(BaseModel):
     """Модель доступных для пользователя уроков курса"""
 
     course = models.ForeignKey(
-        "courses.Course",
+        to="courses.Course",
         related_name="student",
         on_delete=models.CASCADE,
         verbose_name=_("Курс"),
     )
     student = models.ForeignKey(
-        "users.User",
+        to="users.User",
         related_name="available_lessons",
         on_delete=models.CASCADE,
         verbose_name=_("Студент"),
@@ -36,11 +36,12 @@ class AvailableLessons(BaseModel):
         unique_together = ["course", "student"]
 
     def __str__(self):
-        return f"For {self.course.title}: {self.max_available_lesson}"
+        return f"Для {self.course.title} доступен урок - {self.max_available_lesson}"
 
 
 @receiver(post_save, sender=AvailableLessons)
 def create_completion_on_max_lesson(sender, instance, created, **kwargs):
+    """Создание экземпляра модели Completion при достижении последнего доступного урока"""
     if not created and instance.max_available_lesson == instance.course.lessons.last().order:
         Completion.objects.create(
             course=instance.course,

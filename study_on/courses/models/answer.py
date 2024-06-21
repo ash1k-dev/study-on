@@ -11,13 +11,13 @@ class Answer(BaseModel):
     """Модель ответов на вопросы"""
 
     survey_student = models.ForeignKey(
-        "courses.SurveyStudent",
+        to="courses.SurveyStudent",
         on_delete=models.CASCADE,
         related_name="answers",
         verbose_name=_("Студент"),
     )
     question = models.ForeignKey(
-        "courses.Question", on_delete=models.CASCADE, related_name="answers", verbose_name=_("Вопрос")
+        to="courses.Question", on_delete=models.CASCADE, related_name="answers", verbose_name=_("Вопрос")
     )
     text = models.TextField(verbose_name=_("Ответ"))
     is_correct = models.BooleanField(default=False, verbose_name=_("Правильность"))
@@ -28,7 +28,7 @@ class Answer(BaseModel):
         constraints = [models.UniqueConstraint(fields=["question"], name="unique_answer")]
 
     def __str__(self):
-        return f"{self.question.title}: {self.text}"
+        return f"{self.question.title}: {self.is_correct}"
 
 
 @receiver(post_save, sender=Answer)

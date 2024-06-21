@@ -9,7 +9,7 @@ class Content(BaseModel):
     """Модель содержания для урока"""
 
     lesson = models.ForeignKey(
-        "courses.Lesson",
+        to="courses.Lesson",
         related_name="contents",
         on_delete=models.CASCADE,
         verbose_name=_("Урок"),

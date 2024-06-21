@@ -12,13 +12,13 @@ class SurveyStudent(BaseModel):
     """Модель записи студента на тест"""
 
     student = models.ForeignKey(
-        "users.User",
+        to="users.User",
         on_delete=models.CASCADE,
         related_name="survey_students",
         verbose_name=_("Студент"),
     )
     survey = models.ForeignKey(
-        "courses.Survey",
+        to="courses.Survey",
         on_delete=models.CASCADE,
         related_name="survey_students",
         verbose_name=_("Тест"),

@@ -8,7 +8,7 @@ class Subject(BaseModel):
     """Модель предмета"""
 
     heading = models.ForeignKey(
-        "courses.Heading", related_name="subjects", on_delete=models.CASCADE, verbose_name=_("Направление")
+        to="courses.Heading", related_name="subjects", on_delete=models.CASCADE, verbose_name=_("Направление")
     )
     title = models.CharField(max_length=200, verbose_name=_("Заголовок"))
     description = models.TextField(verbose_name=_("Описание"))

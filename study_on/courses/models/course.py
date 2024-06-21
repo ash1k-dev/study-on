@@ -8,27 +8,27 @@ class Course(BaseModel):
     """Модель курса"""
 
     author = models.ForeignKey(
-        "users.User",
+        to="users.User",
         on_delete=models.CASCADE,
         verbose_name=_("Автор"),
     )
     subject = models.ForeignKey(
-        "courses.Subject", related_name="courses", on_delete=models.CASCADE, verbose_name=_("Предмет")
+        to="courses.Subject", related_name="courses", on_delete=models.CASCADE, verbose_name=_("Предмет")
     )
     teachers = models.ManyToManyField(
-        "users.User",
+        to="users.User",
         related_name="courses_teachers",
         blank=True,
         verbose_name=_("Преподаватели"),
     )
     students = models.ManyToManyField(
-        "users.User",
+        to="users.User",
         related_name="courses_joined",
         blank=True,
         verbose_name=_("Студенты"),
     )
     completed_students = models.ManyToManyField(
-        "users.User",
+        to="users.User",
         related_name="completed_courses",
         through="courses.Completion",
         blank=True,

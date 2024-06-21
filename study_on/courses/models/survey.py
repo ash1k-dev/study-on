@@ -8,7 +8,7 @@ class Survey(BaseModel):
     """Модель теста для урока"""
 
     lesson = models.ForeignKey(
-        "courses.Lesson",
+        to="courses.Lesson",
         related_name="surveys",
         on_delete=models.CASCADE,
         verbose_name=_("Урок"),

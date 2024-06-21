@@ -8,13 +8,13 @@ class Review(BaseModel):
     """Модель отзыва"""
 
     course = models.ForeignKey(
-        "courses.Course",
+        to="courses.Course",
         related_name="reviews",
         on_delete=models.CASCADE,
         verbose_name=_("Курс"),
     )
     student = models.ForeignKey(
-        "users.User",
+        to="users.User",
         related_name="reviews",
         on_delete=models.CASCADE,
         verbose_name=_("Студент"),
@@ -35,4 +35,4 @@ class Review(BaseModel):
         constraints = [models.UniqueConstraint(fields=["course", "student"], name="unique_review")]
 
     def __str__(self):
-        return self.text
+        return f"Отзыв {self.student} на курс {self.course}"

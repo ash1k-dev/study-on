@@ -12,13 +12,13 @@ class Completion(BaseModel):
     """Модель отметки о завершении курса"""
 
     course = models.ForeignKey(
-        "courses.Course",
+        to="courses.Course",
         on_delete=models.CASCADE,
         related_name="completions",
         verbose_name=_("Курс"),
     )
     student = models.ForeignKey(
-        "users.User",
+        to="users.User",
         on_delete=models.CASCADE,
         related_name="completions",
         verbose_name=_("Студент"),

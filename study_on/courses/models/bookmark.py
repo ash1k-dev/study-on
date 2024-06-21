@@ -8,13 +8,13 @@ class Bookmark(BaseModel):
     """Модель закладок"""
 
     course = models.ForeignKey(
-        "courses.Course",
+        to="courses.Course",
         related_name="bookmarks",
         on_delete=models.CASCADE,
         verbose_name=_("Курс"),
     )
     student = models.ForeignKey(
-        "users.User",
+        to="users.User",
         related_name="bookmarks",
         on_delete=models.CASCADE,
         verbose_name=_("Студент"),
@@ -26,4 +26,4 @@ class Bookmark(BaseModel):
         unique_together = ["course", "student"]
 
     def __str__(self):
-        return f"{self.course} - {self.student}"
+        return f"Курс {self.course} добавлен в закладки {self.student}"

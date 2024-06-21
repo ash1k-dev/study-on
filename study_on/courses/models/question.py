@@ -9,7 +9,7 @@ class Question(BaseModel):
     """Модель вопросов для теста"""
 
     survey = models.ForeignKey(
-        "courses.Survey",
+        to="courses.Survey",
         related_name="questions",
         on_delete=models.CASCADE,
         verbose_name=_("Тест"),
