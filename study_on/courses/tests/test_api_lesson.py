@@ -4,13 +4,12 @@ from model_bakery import baker
 
 from study_on.courses.api.serializers import LessonSerializer
 from study_on.courses.models import Course, Lesson
-from study_on.users.models import User
 
 
 @pytest.mark.django_db
 def test_lesson_list(admin_api_client, unauthorized_api_client):
     """Проверка получения списка уроков"""
-    baker.make(Lesson, _quantity=5, course=baker.make(Course, author=baker.make(User)))
+    baker.make(Lesson, _quantity=5)
     url = reverse("api:lesson-list")
     # проверка для администраторов
     response = admin_api_client.get(url)
@@ -25,8 +24,9 @@ def test_lesson_list(admin_api_client, unauthorized_api_client):
 def test_lesson_create(admin_api_client, unauthorized_api_client):
     """Проверка создания урока"""
     url = reverse("api:lesson-list")
+    course = baker.make(Course)
     data = {
-        "course": baker.make(Course, author=baker.make(User)).id,
+        "course": course.id,
         "title": "test",
         "description": "test",
         "order": 1,
@@ -45,7 +45,7 @@ def test_lesson_create(admin_api_client, unauthorized_api_client):
 @pytest.mark.django_db
 def test_lesson_detail(admin_api_client, unauthorized_api_client):
     """Проверка получения урока"""
-    lesson = baker.make(Lesson, course=baker.make(Course, author=baker.make(User)))
+    lesson = baker.make(Lesson)
     url = reverse("api:lesson-detail", args=[lesson.id])
     # проверка для администраторов
     response = admin_api_client.get(url)
@@ -63,7 +63,7 @@ def test_lesson_detail(admin_api_client, unauthorized_api_client):
 @pytest.mark.django_db
 def test_lesson_update(admin_api_client, unauthorized_api_client):
     """Проверка обновления урока"""
-    lesson = baker.make(Lesson, course=baker.make(Course, author=baker.make(User)))
+    lesson = baker.make(Lesson)
     url = reverse("api:lesson-detail", args=[lesson.id])
     data = {"title": "test"}
     # проверка для администраторов
@@ -78,7 +78,7 @@ def test_lesson_update(admin_api_client, unauthorized_api_client):
 @pytest.mark.django_db
 def test_lesson_delete(admin_api_client, unauthorized_api_client):
     """Проверка удаления урока"""
-    lesson = baker.make(Lesson, course=baker.make(Course, author=baker.make(User)))
+    lesson = baker.make(Lesson)
     url = reverse("api:lesson-detail", args=[lesson.id])
     # проверка для администраторов
     response = admin_api_client.delete(url)
@@ -89,7 +89,7 @@ def test_lesson_delete(admin_api_client, unauthorized_api_client):
     assert response.status_code == 404
     assert Lesson.objects.count() == 0
     # проверка для неавторизованных пользователей
-    lesson = baker.make(Lesson, course=baker.make(Course, author=baker.make(User)))
+    lesson = baker.make(Lesson)
     url = reverse("api:lesson-detail", args=[lesson.id])
     response = unauthorized_api_client.delete(url)
     assert response.status_code == 403

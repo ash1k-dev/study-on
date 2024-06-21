@@ -10,7 +10,7 @@ from study_on.users.models import User
 @pytest.mark.django_db
 def test_course_list(admin_api_client, unauthorized_api_client):
     """Проверка получения списка курсов"""
-    baker.make(Course, _quantity=5, author=baker.make(User))
+    baker.make(Course, _quantity=5)
     url = reverse("api:course-list")
     # проверка для администраторов
     response = admin_api_client.get(url)
@@ -25,9 +25,11 @@ def test_course_list(admin_api_client, unauthorized_api_client):
 def test_course_create(admin_api_client, unauthorized_api_client):
     """Проверка создания курса"""
     url = reverse("api:course-list")
+    user = baker.make(User)
+    subject = baker.make(Subject)
     data = {
-        "author": baker.make(User).id,
-        "subject": baker.make(Subject).id,
+        "author": user.id,
+        "subject": subject.id,
         "title": "test",
         "description": "test",
         "slug": "test",
@@ -46,7 +48,7 @@ def test_course_create(admin_api_client, unauthorized_api_client):
 @pytest.mark.django_db
 def test_course_detail(admin_api_client, unauthorized_api_client):
     """Проверка получения курса"""
-    course = baker.make(Course, author=baker.make(User))
+    course = baker.make(Course)
     url = reverse("api:course-detail", args=[course.id])
     # проверка для администраторов
     response = admin_api_client.get(url)
@@ -64,7 +66,7 @@ def test_course_detail(admin_api_client, unauthorized_api_client):
 @pytest.mark.django_db
 def test_course_update(admin_api_client, unauthorized_api_client):
     """Проверка обновления курса"""
-    course = baker.make(Course, author=baker.make(User))
+    course = baker.make(Course)
     url = reverse("api:course-detail", args=[course.id])
     data = {"title": "test"}
     # проверка для администраторов
@@ -79,7 +81,7 @@ def test_course_update(admin_api_client, unauthorized_api_client):
 @pytest.mark.django_db
 def test_course_delete(admin_api_client, unauthorized_api_client):
     """Проверка удаления курса"""
-    course = baker.make(Course, author=baker.make(User))
+    course = baker.make(Course)
     url = reverse("api:course-detail", args=[course.id])
     # проверка для администраторов
     response = admin_api_client.delete(url)
@@ -90,7 +92,7 @@ def test_course_delete(admin_api_client, unauthorized_api_client):
     assert response.status_code == 404
     assert Course.objects.count() == 0
     # проверка для неавторизованных пользователей
-    course = baker.make(Course, author=baker.make(User))
+    course = baker.make(Course)
     url = reverse("api:course-detail", args=[course.id])
     response = unauthorized_api_client.delete(url)
     assert response.status_code == 403

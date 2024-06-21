@@ -10,8 +10,6 @@ class Course(BaseModel):
     author = models.ForeignKey(
         "users.User",
         on_delete=models.CASCADE,
-        blank=True,
-        default=None,
         verbose_name=_("Автор"),
     )
     subject = models.ForeignKey(

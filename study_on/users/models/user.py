@@ -28,8 +28,3 @@ class User(AbstractUser):
 
         """
         return reverse("users:detail", kwargs={"username": self.username})
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=["reward"], name="unique_reward"),
-        ]
