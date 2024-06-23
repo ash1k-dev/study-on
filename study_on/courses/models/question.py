@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from config.settings.base import MAX_TITLE_LENGTH
 from study_on.services.fields import OrderField
 from study_on.services.models import BaseModel
 
@@ -14,8 +15,8 @@ class Question(BaseModel):
         on_delete=models.CASCADE,
         verbose_name=_("Тест"),
     )
-    title = models.CharField(max_length=200, verbose_name=_("Заголовок"))
-    text = models.TextField(max_length=400, verbose_name=_("Текст вопроса"))
+    title = models.CharField(max_length=MAX_TITLE_LENGTH, verbose_name=_("Заголовок"))
+    text = models.TextField(verbose_name=_("Текст вопроса"))
     order = OrderField(blank=True, for_fields=["survey"], verbose_name=_("Порядок"))
     is_published = models.BooleanField(default=False, verbose_name=_("Активен"))
 

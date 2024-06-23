@@ -9,7 +9,7 @@ class Content(BaseModel):
     """Модель содержания"""
 
     post = models.ForeignKey(
-        "blog.Post",
+        to="blog.Post",
         related_name="contents",
         on_delete=models.CASCADE,
         verbose_name=_("Пост"),
@@ -17,7 +17,7 @@ class Content(BaseModel):
     text = models.TextField(verbose_name=_("Текст"))
     video = models.URLField(blank=True, verbose_name=_("Видео"))
     image = models.FileField(upload_to="images", blank=True, verbose_name=_("Изображение"))
-    order = OrderField(blank=True, for_fields=["lesson"], verbose_name=_("Порядок"))
+    order = OrderField(blank=True, for_fields=["post"], verbose_name=_("Порядок"))
     is_published = models.BooleanField(default=False, verbose_name=_("Опубликовано"))
 
     class Meta:

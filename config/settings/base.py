@@ -361,3 +361,6 @@ SPECTACULAR_SETTINGS = {
 # ------------------------------------------------------------------------------
 STUDY_ON_EMAIL = env("STUDY_ON_EMAIL", default="test_mail@localhost")
 COURSE_REMINDER_DAYS = env("COURSE_REMINDER_DAYS", default=5)
+MAX_TITLE_LENGTH = env.int("MAX_TITLE_LENGTH", default=50)
+MAX_DESCRIPTION_LENGTH = env.int("MAX_DESCRIPTION_LENGTH", default=500)
+MAX_NAME_LENGTH = env.int("MAX_NAME_LENGTH", default=50)

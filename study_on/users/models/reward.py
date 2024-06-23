@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from config.settings.base import MAX_TITLE_LENGTH
 from study_on.services.models import BaseModel
 
 CHOICES = (
@@ -13,7 +14,7 @@ CHOICES = (
 class Reward(BaseModel):
     """Модель для награды"""
 
-    title = models.CharField(max_length=200, verbose_name=_("Название награды"))
+    title = models.CharField(max_length=MAX_TITLE_LENGTH, verbose_name=_("Название награды"))
     reward_type = models.CharField(
         max_length=50,
         choices=CHOICES,

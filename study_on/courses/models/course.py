@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from config.settings.base import MAX_DESCRIPTION_LENGTH, MAX_TITLE_LENGTH
 from study_on.services.models import BaseModel
 
 
@@ -34,9 +35,9 @@ class Course(BaseModel):
         blank=True,
         verbose_name=_("Завершившие курс"),
     )
-    title = models.CharField(max_length=200, verbose_name=_("Заголовок"))
-    description = models.TextField(max_length=500, verbose_name=_("Описание"))
-    slug = models.SlugField(max_length=200, unique=True, verbose_name=_("Ссылка"))
+    title = models.CharField(max_length=MAX_TITLE_LENGTH, verbose_name=_("Заголовок"))
+    description = models.TextField(max_length=MAX_DESCRIPTION_LENGTH, verbose_name=_("Описание"))
+    slug = models.SlugField(unique=True, verbose_name=_("Ссылка"))
     is_published = models.BooleanField(default=False, verbose_name=_("Активен"))
 
     class Meta:
