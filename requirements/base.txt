@@ -23,5 +23,7 @@ django-filter==23.5 #https://github.com/carltongibson/django-filter/tree/main
 drf_social_oauth2==2.2.0 #https://github.com/wagnerdelima/drf-social-oauth2
 # DRF-spectacular for api documentation
 drf-spectacular==0.27.1  # https://github.com/tfranzel/drf-spectacular
-# Docx for working with docx
+# Docxtpl for working with docx
 docxtpl==0.17.0 #https://github.com/elapouya/python-docx-template
+# model_bakery for models example
+model-bakery==1.18.1 #https://github.com/model-bakers/model_bakery
