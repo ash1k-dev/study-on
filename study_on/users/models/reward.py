@@ -19,7 +19,9 @@ class Reward(BaseModel):
         choices=CHOICES,
         verbose_name=_("Тип награды"),
     )
-    reward_value = models.IntegerField(default=0, verbose_name=_("Количество действий, нужное для получения награды"))
+    reward_value = models.PositiveIntegerField(
+        default=0, verbose_name=_("Количество действий, нужное для получения награды")
+    )
     image = models.ImageField(blank=True, upload_to="images", verbose_name=_("Изображение"))
 
     class Meta:

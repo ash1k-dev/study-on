@@ -37,15 +37,16 @@ class SurveyStudent(BaseModel):
 def send_email_to_student(sender, instance, created, **kwargs):
     """Отправка письма студенту после проверки теста и объявление следующего урока доступным"""
     if not created and instance.is_passed:
-        send_email.delay(
-            instance.student.username, instance.student.email, instance.survey.lesson.title, "survey_approve"
-        )
-        available_lessons = AvailableLessons.objects.get(
+        if instance.student.notification_permission:
+            send_email.delay(
+                instance.student.username, instance.student.email, instance.survey.lesson.title, "survey_approve"
+            )
+        available_lessons = AvailableLessons.objects.filter(
             student=instance.student, course=instance.survey.lesson.course
         )
         after_lesson = Lesson.objects.filter(
             course=instance.survey.lesson.course, order__gt=available_lessons.max_available_lesson
         )
         if after_lesson.exists():
-            available_lessons.max_available_lesson = after_lesson.first().order
+            available_lessons.first().max_available_lesson = after_lesson.first().order
             available_lessons.save()

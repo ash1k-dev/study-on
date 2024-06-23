@@ -27,9 +27,10 @@ class UserAdmin(auth_admin.UserAdmin):
                 "fields": (
                     "name",
                     "email",
+                    "reward",
+                    "notification_permission",
                     "identification_code",
                     "identification_code_entry_attempts",
-                    "reward",
                 )
             },
         ),

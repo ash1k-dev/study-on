@@ -11,6 +11,7 @@ class User(AbstractUser):
     name = CharField(blank=True, max_length=255, verbose_name=_("Имя пользователя"))
     first_name = None  # type: ignore
     last_name = None  # type: ignore
+    notification_permission = models.BooleanField(default=True, verbose_name=_("Уведомления"))
     reward = models.ManyToManyField(to="users.Reward", blank=True, related_name="users", verbose_name=_("Награда"))
     identification_code = models.IntegerField(default=0, verbose_name=_("Код для подтверждения пользователя"))
     identification_code_entry_attempts = models.IntegerField(default=0, verbose_name=_("Попытки ввода кода"))

@@ -49,7 +49,7 @@ def send_email_to_teacher(sender, instance, created, **kwargs):
         questions = instance.survey_student.survey.questions.all().count()
         answers = Answer.objects.filter(survey_student=instance.survey_student).count()
         if questions == answers:
-            teachers = instance.survey_student.survey.lesson.course.teachers.all()
+            teachers = instance.survey_student.survey.lesson.course.teachers.filter(notification_permission=True)
             for teacher in teachers:
                 send_email.delay(
                     teacher.username, teacher.email, instance.survey_student.survey.lesson.title, "survey_done"

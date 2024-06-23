@@ -35,17 +35,8 @@ def check_reward(sender, instance, created, **kwargs):
     """Получение награды за прохождение курса"""
     if created:
         completion_count = Completion.objects.filter(student=instance.student).count()
-        if completion_count == 1:
-            reward = Reward.objects.get(title="За прохождение первого курса")
+        reward = Reward.objects.filter(reward_type="course_completion", reward_value=completion_count).first()
+        if reward:
             instance.student.reward.add(reward)
-            send_email.delay(instance.student.username, instance.student.email, reward.title, "reward")
-        elif completion_count == 5:
-            reward = Reward.objects.get(title="За прохождение пяти курсов")
-            instance.student.reward.add(reward)
-            send_email.delay(instance.student.username, instance.student.email, reward.title, "reward")
-        elif completion_count == 10:
-            reward = Reward.objects.get(title="За прохождение десяти курсов")
-            instance.student.reward.add(reward)
-            send_email.delay(instance.student.username, instance.student.email, reward.title, "reward")
-        else:
-            pass
+            if instance.student.notification_permission:
+                send_email.delay(instance.student.username, instance.student.email, reward.title, "reward")
