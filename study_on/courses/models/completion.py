@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 
 from study_on.services.models import BaseModel
 from study_on.users.models import Reward
-from study_on.users.tasks import send_email
+from study_on.users.tasks import send_email_task
 
 
 class Completion(BaseModel):
@@ -39,4 +39,9 @@ def check_reward(sender, instance, created, **kwargs):
         if reward:
             instance.student.reward.add(reward)
             if instance.student.notification_permission:
-                send_email.delay(instance.student.username, instance.student.email, reward.title, "reward")
+                send_email_task.delay(
+                    username=instance.student.username,
+                    email=instance.student.email,
+                    reward=reward.title,
+                    email_type="reward",
+                )

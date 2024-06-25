@@ -4,7 +4,7 @@ from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
 
 from study_on.services.models import BaseModel
-from study_on.users.tasks import send_email
+from study_on.users.tasks import send_email_task
 
 
 class Answer(BaseModel):
@@ -51,6 +51,9 @@ def send_email_to_teacher(sender, instance, created, **kwargs):
         if questions == answers:
             teachers = instance.survey_student.survey.lesson.course.teachers.filter(notification_permission=True)
             for teacher in teachers:
-                send_email.delay(
-                    teacher.username, teacher.email, instance.survey_student.survey.lesson.title, "survey_done"
+                send_email_task.delay(
+                    username=teacher.username,
+                    email=teacher.email,
+                    lesson=instance.survey_student.survey.lesson.title,
+                    email_type="survey_done",
                 )

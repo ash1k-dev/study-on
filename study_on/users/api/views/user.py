@@ -26,7 +26,7 @@ from study_on.users.api.serializers import (
     VerifyChangePasswordUserSerializer,
 )
 from study_on.users.models import Reward
-from study_on.users.tasks import send_email
+from study_on.users.tasks import send_email_task
 
 User = get_user_model()
 
@@ -79,7 +79,12 @@ class UserViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin, GenericV
             is_active=False,
             identification_code=code,
         )
-        send_email.delay(user.username, user.email, user.identification_code, "confirm")
+        send_email_task.delay(
+            username=user.username,
+            email=user.email,
+            identification_code=user.identification_code,
+            email_type="confirm",
+        )
         return Response(status=status.HTTP_201_CREATED)
 
     @action(
@@ -102,7 +107,12 @@ class UserViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin, GenericV
             user.identification_code_entry_attempts += 1
             user.save()
             if user.identification_code_entry_attempts == MAX_INCORRECT_ATTEMPTS:
-                send_email.delay(user.username, user.email, user.identification_code, "confirm_error")
+                send_email_task.delay(
+                    username=user.username,
+                    email=user.email,
+                    identification_code=user.identification_code,
+                    email_type="confirm_error",
+                )
                 user.delete()
             return Response(data=e.args[0], status=status.HTTP_400_BAD_REQUEST)
 
@@ -120,7 +130,12 @@ class UserViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin, GenericV
         user = User.objects.get(email=serializer.validated_data["email"])
         user.identification_code = code
         user.save()
-        send_email.delay(user.username, user.email, user.identification_code, "change_password")
+        send_email_task.delay(
+            username=user.username,
+            email=user.email,
+            identification_code=user.identification_code,
+            email_type="change_password",
+        )
         return Response(status=status.HTTP_200_OK)
 
     @action(
